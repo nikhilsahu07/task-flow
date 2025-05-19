@@ -1,0 +1,33 @@
+{
+  "name": "typesnformats",
+  "version": "1.0.0",
+  "description": "Basic MERN Stack Application with industry standard practices.",
+  "private": "true",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "lint": "npm run lint --workspaces",
+    "lint:fix": "npm run lint:fix --workspaces",
+    "format": "npm run format --workspaces",
+    "prepare": "husky",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" "
+  },
+  "keywords": [
+    "MERN",
+    "typescript",
+    "react",
+    "eslint",
+    "husky"
+  ],
+  "author": "Haan jii, Humi ne likhi hai saari package.json",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "husky": "^9.1.7"
+  }
+}
