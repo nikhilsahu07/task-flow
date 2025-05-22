@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Express TypeScript backend for MERN appln.",
   "main": "dist/server.js",
-  "type": "module",
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc",
@@ -17,9 +16,12 @@
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.27.0",
+    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.15.18",
+    "@types/uuid": "^9.0.7",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
     "eslint": "^9.27.0",
@@ -32,9 +34,15 @@
     "typescript-eslint": "^8.32.1"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "mongoose": "^8.15.0"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.1",
+    "uuid": "^9.0.1",
+    "zod": "^3.22.4"
   }
 }

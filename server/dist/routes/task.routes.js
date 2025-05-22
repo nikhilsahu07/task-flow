@@ -1,0 +1,21 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const task_controller_1 = require("../controllers/task.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const validation_middleware_1 = require("../middleware/validation.middleware");
+const task_validator_1 = require("../validators/task.validator");
+const types_1 = require("../types");
+const router = (0, express_1.Router)();
+// All routes are protected
+router.use(auth_middleware_1.authenticate);
+// Task routes
+router.post('/', (0, validation_middleware_1.validate)(task_validator_1.createTaskSchema), task_controller_1.createTask);
+router.get('/', (0, validation_middleware_1.validateQuery)(task_validator_1.taskFilterSchema), task_controller_1.getTasks);
+router.get('/:id', task_controller_1.getTaskById);
+router.put('/:id', (0, validation_middleware_1.validate)(task_validator_1.updateTaskSchema), task_controller_1.updateTask);
+router.delete('/:id', task_controller_1.deleteTask);
+// Admin-only routes
+router.get('/admin/all', (0, auth_middleware_1.authorize)([types_1.UserRole.ADMIN]), (0, validation_middleware_1.validateQuery)(task_validator_1.taskFilterSchema), task_controller_1.getTasks);
+exports.default = router;
+//# sourceMappingURL=task.routes.js.map
