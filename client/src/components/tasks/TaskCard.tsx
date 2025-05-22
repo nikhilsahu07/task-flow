@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, ArrowRight, Tag } from 'lucide-react';
+import { useDrag } from 'react-dnd';
 import { Task, TaskPriority, TaskStatus } from '../../types';
+import { ITEM_TYPE } from './TaskColumn';
 
 interface TaskCardProps {
   task: Task;
@@ -9,6 +11,20 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Set up drag source
+  const [{ isDragging }, drag] = useDrag({
+    type: ITEM_TYPE,
+    item: { id: task._id },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+
+  // Connect the drag ref to the card ref
+  drag(cardRef);
+
   // Format date to display
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'No due date';
@@ -67,7 +83,12 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
+    <div
+      ref={cardRef}
+      className={`bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow ${
+        isDragging ? 'opacity-50' : 'opacity-100'
+      } cursor-move`}
+    >
       <div className="p-5">
         <div className="flex justify-between items-start mb-3">
           <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">{task.title}</h3>

@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import 'react-toastify/dist/ReactToastify.css';
 
 /**
@@ -38,95 +40,97 @@ import NotFoundPage from './pages/NotFoundPage';
 const App: React.FC = () => {
   return (
     <AuthProvider>
-      <Router>
-        {/* Layout component wraps all pages for consistent header/footer */}
-        <Layout>
-          <Routes>
-            {/* Public routes - accessible without authentication */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+      <DndProvider backend={HTML5Backend}>
+        <Router>
+          {/* Layout component wraps all pages for consistent header/footer */}
+          <Layout>
+            <Routes>
+              {/* Public routes - accessible without authentication */}
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
 
-            {/* Protected routes - require user authentication */}
-            {/* The PrivateRoute component checks if user is logged in before rendering */}
-            <Route
-              path="/dashboard"
-              element={
-                <PrivateRoute>
-                  <DashboardPage />
-                </PrivateRoute>
-              }
-            />
+              {/* Protected routes - require user authentication */}
+              {/* The PrivateRoute component checks if user is logged in before rendering */}
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute>
+                    <DashboardPage />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/tasks"
-              element={
-                <PrivateRoute>
-                  <TaskListPage />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/tasks"
+                element={
+                  <PrivateRoute>
+                    <TaskListPage />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/tasks/create"
-              element={
-                <PrivateRoute>
-                  <CreateTaskPage />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/tasks/create"
+                element={
+                  <PrivateRoute>
+                    <CreateTaskPage />
+                  </PrivateRoute>
+                }
+              />
 
-            {/* Dynamic routes with URL parameters */}
-            {/* :id is a parameter that will be replaced with actual task ID */}
-            <Route
-              path="/tasks/:id"
-              element={
-                <PrivateRoute>
-                  <TaskDetailPage />
-                </PrivateRoute>
-              }
-            />
+              {/* Dynamic routes with URL parameters */}
+              {/* :id is a parameter that will be replaced with actual task ID */}
+              <Route
+                path="/tasks/:id"
+                element={
+                  <PrivateRoute>
+                    <TaskDetailPage />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/tasks/:id/edit"
-              element={
-                <PrivateRoute>
-                  <EditTaskPage />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/tasks/:id/edit"
+                element={
+                  <PrivateRoute>
+                    <EditTaskPage />
+                  </PrivateRoute>
+                }
+              />
 
-            <Route
-              path="/profile"
-              element={
-                <PrivateRoute>
-                  <ProfilePage />
-                </PrivateRoute>
-              }
-            />
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <ProfilePage />
+                  </PrivateRoute>
+                }
+              />
 
-            {/* Redirect /tasks to dashboard if already at root */}
-            <Route path="/tasks" element={<Navigate to="/dashboard" replace />} />
+              {/* Redirect /tasks to dashboard if already at root */}
+              <Route path="/tasks" element={<Navigate to="/dashboard" replace />} />
 
-            {/* 404 route - catches all undefined routes */}
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Layout>
+              {/* 404 route - catches all undefined routes */}
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Layout>
 
-        {/* Toast notifications configuration */}
-        {/* Provides non-intrusive notifications for user feedback */}
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-      </Router>
+          {/* Toast notifications configuration */}
+          {/* Provides non-intrusive notifications for user feedback */}
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+        </Router>
+      </DndProvider>
     </AuthProvider>
   );
 };

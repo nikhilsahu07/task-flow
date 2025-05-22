@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { PlusCircle, AlertTriangle } from 'lucide-react';
-import { getTasks, deleteTask } from '../api/taskApi';
+import { getTasks, deleteTask, updateTask } from '../api/taskApi';
 import { Task, TaskStatus } from '../types';
-import TaskCard from '../components/tasks/TaskCard';
+import TaskColumn from '../components/tasks/TaskColumn';
 
 const DashboardPage: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -54,6 +54,63 @@ const DashboardPage: React.FC = () => {
     }
   };
 
+  // Handle task status change via drag and drop
+  const handleTaskDrop = async (taskId: string, newStatus: TaskStatus) => {
+    // Find the task to update
+    const taskToUpdate = tasks.find((task) => task._id === taskId);
+
+    if (!taskToUpdate) return;
+
+    // Skip if the status hasn't changed
+    if (taskToUpdate.status === newStatus) return;
+
+    try {
+      // Optimistically update the UI
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task._id === taskId ? { ...task, status: newStatus } : task)),
+      );
+
+      // Update in the backend
+      const response = await updateTask(taskId, { status: newStatus });
+
+      if (response.success) {
+        toast.success(`Task moved to ${formatStatus(newStatus)}`);
+      } else {
+        // Revert if the update fails
+        setTasks((prevTasks) =>
+          prevTasks.map((task) =>
+            task._id === taskId ? { ...task, status: taskToUpdate.status } : task,
+          ),
+        );
+        toast.error(response.error?.toString() || 'Error updating task');
+      }
+    } catch (_err) {
+      // Revert on error
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task._id === taskId ? { ...task, status: taskToUpdate.status } : task,
+        ),
+      );
+      toast.error('An unexpected error occurred');
+    }
+  };
+
+  // Format status text for display
+  const formatStatus = (status: TaskStatus) => {
+    switch (status) {
+      case TaskStatus.TODO:
+        return 'To Do';
+      case TaskStatus.IN_PROGRESS:
+        return 'In Progress';
+      case TaskStatus.REVIEW:
+        return 'Review';
+      case TaskStatus.DONE:
+        return 'Done';
+      default:
+        return status;
+    }
+  };
+
   // Group tasks by status
   const todoTasks = tasks.filter((task) => task.status === TaskStatus.TODO);
   const inProgressTasks = tasks.filter((task) => task.status === TaskStatus.IN_PROGRESS);
@@ -88,60 +145,40 @@ const DashboardPage: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* To Do Column */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">To Do</h2>
-            {todoTasks.length === 0 ? (
-              <p className="text-gray-500 text-sm py-4 text-center">No tasks</p>
-            ) : (
-              <div className="space-y-4">
-                {todoTasks.map((task) => (
-                  <TaskCard key={task._id} task={task} onDelete={handleDeleteTask} />
-                ))}
-              </div>
-            )}
-          </div>
+          <TaskColumn
+            title="To Do"
+            status={TaskStatus.TODO}
+            tasks={todoTasks}
+            onDelete={handleDeleteTask}
+            onTaskDrop={handleTaskDrop}
+          />
 
           {/* In Progress Column */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">In Progress</h2>
-            {inProgressTasks.length === 0 ? (
-              <p className="text-gray-500 text-sm py-4 text-center">No tasks</p>
-            ) : (
-              <div className="space-y-4">
-                {inProgressTasks.map((task) => (
-                  <TaskCard key={task._id} task={task} onDelete={handleDeleteTask} />
-                ))}
-              </div>
-            )}
-          </div>
+          <TaskColumn
+            title="In Progress"
+            status={TaskStatus.IN_PROGRESS}
+            tasks={inProgressTasks}
+            onDelete={handleDeleteTask}
+            onTaskDrop={handleTaskDrop}
+          />
 
           {/* Review Column */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Review</h2>
-            {reviewTasks.length === 0 ? (
-              <p className="text-gray-500 text-sm py-4 text-center">No tasks</p>
-            ) : (
-              <div className="space-y-4">
-                {reviewTasks.map((task) => (
-                  <TaskCard key={task._id} task={task} onDelete={handleDeleteTask} />
-                ))}
-              </div>
-            )}
-          </div>
+          <TaskColumn
+            title="Review"
+            status={TaskStatus.REVIEW}
+            tasks={reviewTasks}
+            onDelete={handleDeleteTask}
+            onTaskDrop={handleTaskDrop}
+          />
 
           {/* Done Column */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Done</h2>
-            {doneTasks.length === 0 ? (
-              <p className="text-gray-500 text-sm py-4 text-center">No tasks</p>
-            ) : (
-              <div className="space-y-4">
-                {doneTasks.map((task) => (
-                  <TaskCard key={task._id} task={task} onDelete={handleDeleteTask} />
-                ))}
-              </div>
-            )}
-          </div>
+          <TaskColumn
+            title="Done"
+            status={TaskStatus.DONE}
+            tasks={doneTasks}
+            onDelete={handleDeleteTask}
+            onTaskDrop={handleTaskDrop}
+          />
         </div>
       )}
 
