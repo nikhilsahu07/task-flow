@@ -1,20 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TaskStatus = exports.TaskPriority = exports.UserRole = void 0;
-// User roles enum
+// UserRole defines the possible roles a user can have.
 var UserRole;
 (function (UserRole) {
     UserRole["ADMIN"] = "admin";
     UserRole["USER"] = "user";
 })(UserRole || (exports.UserRole = UserRole = {}));
-// Task priority enum
+// TaskPriority defines the different priority levels a task can have.
 var TaskPriority;
 (function (TaskPriority) {
     TaskPriority["LOW"] = "low";
     TaskPriority["MEDIUM"] = "medium";
     TaskPriority["HIGH"] = "high";
 })(TaskPriority || (exports.TaskPriority = TaskPriority = {}));
-// Task status enum
+// TaskStatus defines the various stages or states a task can be in.
 var TaskStatus;
 (function (TaskStatus) {
     TaskStatus["TODO"] = "todo";

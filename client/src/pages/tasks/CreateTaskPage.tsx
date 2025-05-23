@@ -5,25 +5,25 @@ import { ArrowLeft } from 'lucide-react';
 import { createTask, TaskFormData } from '../../api/taskApi';
 import TaskForm from '../../components/tasks/TaskForm';
 
+// CreateTaskPage provides a form for users to create new tasks.
 const CreateTaskPage: React.FC = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Handle form submission
+  // Handles the submission of the new task data.
   const handleSubmit = async (data: TaskFormData) => {
     setIsLoading(true);
 
     try {
       const response = await createTask(data);
-
-      if (response.success) {
-        toast.success('Task created successfully');
-        navigate(`/tasks/${response.data?.task._id}`);
+      if (response.success && response.data?.task._id) {
+        toast.success('Task created successfully!');
+        navigate(`/tasks/${response.data.task._id}`);
       } else {
-        toast.error(response.error?.toString() || 'Error creating task');
+        toast.error(response.error?.toString() || 'Failed to create task.');
       }
     } catch (_err) {
-      toast.error('An unexpected error occurred');
+      toast.error('An unexpected error occurred while creating the task.');
     } finally {
       setIsLoading(false);
     }
@@ -31,19 +31,19 @@ const CreateTaskPage: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Back button */}
+      {/* Back navigation link to the main task list */}
       <div className="mb-6">
         <Link
           to="/tasks"
           className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to tasks
+          Cancel & Back to Task List
         </Link>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Create New Task</h1>
+      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Create New Task</h1>
         <TaskForm onSubmit={handleSubmit} isLoading={isLoading} />
       </div>
     </div>

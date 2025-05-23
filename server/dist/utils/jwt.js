@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyToken = exports.generateToken = void 0;
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-// Get JWT secret from environment variables
-const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret';
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken")); // Library for creating and verifying JSON Web Tokens (JWTs)
+// Retrieve JWT secret from environment variables. Fallback to a default for development.
+// IMPORTANT: For production, JWT_SECRET *must* be a strong, unique secret stored securely in environment variables.
+const JWT_SECRET = process.env.JWT_SECRET || 'default-dev-jwt-secret-replace-in-prod';
 /**
  * Generate a JWT token for a user
  * JSON Web Tokens (JWT) are an open, industry standard RFC 7519 method for representing
@@ -19,15 +20,16 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret';
  * then creating a signature by hashing them with a secret key
  */
 const generateToken = (id, email, role) => {
-    // Create payload with user information
+    // Construct the payload to be embedded in the JWT.
     const payload = {
-        id,
-        email,
-        role,
+        id, // User's unique identifier
+        email, // User's email address
+        role, // User's role (e.g., admin, user)
     };
-    // Sign the token with the secret key and set expiration
+    // Sign the payload with the JWT_SECRET to create the token.
+    // The token is set to expire in 1 day ('1d').
     return jsonwebtoken_1.default.sign(payload, JWT_SECRET, {
-        expiresIn: '1d', // Token expires in 1 day
+        expiresIn: '1d', // Standard time format string (e.g., '1h', '7d')
     });
 };
 exports.generateToken = generateToken;
@@ -35,8 +37,16 @@ exports.generateToken = generateToken;
  * Verify and decode a JWT token
  */
 const verifyToken = (token) => {
-    // Verify token signature and return decoded payload
-    return jsonwebtoken_1.default.verify(token, JWT_SECRET);
+    try {
+        // jwt.verify checks the token's signature against the JWT_SECRET and decodes it.
+        return jsonwebtoken_1.default.verify(token, JWT_SECRET);
+    }
+    catch (error) {
+        // Handle specific JWT errors or re-throw a generic error.
+        // For example, JsonWebTokenError for malformed tokens, TokenExpiredError for expired tokens.
+        console.error('JWT verification failed:', error);
+        throw new Error('Invalid or expired token.'); // Or handle specific error types
+    }
 };
 exports.verifyToken = verifyToken;
 //# sourceMappingURL=jwt.js.map

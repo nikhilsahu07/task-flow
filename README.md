@@ -55,6 +55,11 @@ The project follows a standard MERN stack architecture:
 npm install
 ```
 
+```bash
+# If any tailwindcss or vite.config.ts related issue occur
+cd client && npm install tailwindcss @tailwindcss/vite
+```
+
 ### Development
 
 ```bash

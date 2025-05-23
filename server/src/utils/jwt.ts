@@ -1,8 +1,9 @@
-import jwt from 'jsonwebtoken';
-import { JwtPayload, UserRole } from '../types';
+import jwt from 'jsonwebtoken'; // Library for creating and verifying JSON Web Tokens (JWTs)
+import { JwtPayload, UserRole } from '../types'; // Custom types for JWT payload and UserRole
 
-// Get JWT secret from environment variables
-const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret';
+// Retrieve JWT secret from environment variables. Fallback to a default for development.
+// IMPORTANT: For production, JWT_SECRET *must* be a strong, unique secret stored securely in environment variables.
+const JWT_SECRET = process.env.JWT_SECRET || 'default-dev-jwt-secret-replace-in-prod';
 
 /**
  * Generate a JWT token for a user
@@ -16,16 +17,17 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret';
  * then creating a signature by hashing them with a secret key
  */
 export const generateToken = (id: string, email: string, role: UserRole): string => {
-  // Create payload with user information
+  // Construct the payload to be embedded in the JWT.
   const payload: JwtPayload = {
-    id,
-    email,
-    role,
+    id, // User's unique identifier
+    email, // User's email address
+    role, // User's role (e.g., admin, user)
   };
 
-  // Sign the token with the secret key and set expiration
+  // Sign the payload with the JWT_SECRET to create the token.
+  // The token is set to expire in 1 day ('1d').
   return jwt.sign(payload, JWT_SECRET, {
-    expiresIn: '1d', // Token expires in 1 day
+    expiresIn: '1d', // Standard time format string (e.g., '1h', '7d')
   });
 };
 
@@ -33,6 +35,13 @@ export const generateToken = (id: string, email: string, role: UserRole): string
  * Verify and decode a JWT token
  */
 export const verifyToken = (token: string): JwtPayload => {
-  // Verify token signature and return decoded payload
-  return jwt.verify(token, JWT_SECRET) as JwtPayload;
+  try {
+    // jwt.verify checks the token's signature against the JWT_SECRET and decodes it.
+    return jwt.verify(token, JWT_SECRET) as JwtPayload;
+  } catch (error) {
+    // Handle specific JWT errors or re-throw a generic error.
+    // For example, JsonWebTokenError for malformed tokens, TokenExpiredError for expired tokens.
+    console.error('JWT verification failed:', error);
+    throw new Error('Invalid or expired token.'); // Or handle specific error types
+  }
 };

@@ -37,57 +37,64 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
-const mongoose_1 = __importStar(require("mongoose"));
-const types_1 = require("../types");
-const bcrypt_1 = __importDefault(require("bcrypt"));
-// User schema definition
+const mongoose_1 = __importStar(require("mongoose")); // Mongoose for MongoDB object modeling
+const types_1 = require("../types"); // Import user-related types and enums
+const bcrypt_1 = __importDefault(require("bcrypt")); // Library for password hashing
+// Mongoose schema for the User model.
+// This defines the shape, data types, validation, and defaults for user documents.
 const userSchema = new mongoose_1.Schema({
     name: {
         type: String,
-        required: [true, 'Name is required'],
-        trim: true,
+        required: [true, 'User name is mandatory.'], // Name is a required field.
+        trim: true, // Remove whitespace from both ends of the string.
     },
     email: {
         type: String,
-        required: [true, 'Email is required'],
-        unique: true,
+        required: [true, 'User email is mandatory.'], // Email is required.
+        unique: true, // Ensures email addresses are unique in the collection.
         trim: true,
-        lowercase: true,
-        match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email'],
+        lowercase: true, // Store email in lowercase to ensure case-insensitive uniqueness.
+        match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address format.'], // Regex for basic email validation.
     },
     password: {
         type: String,
-        required: [true, 'Password is required'],
-        minlength: [6, 'Password must be at least 6 characters long'],
+        required: [true, 'Password is mandatory.'], // Password is required.
+        minlength: [6, 'Password must be at least 6 characters long.'],
+        // Note: Password is not selected by default in queries to prevent accidental exposure.
+        // select: false, // Uncomment this if you want to explicitly hide password by default.
     },
     role: {
         type: String,
-        enum: Object.values(types_1.UserRole),
-        default: types_1.UserRole.USER,
+        enum: Object.values(types_1.UserRole), // Role must be one of the values from UserRole enum.
+        default: types_1.UserRole.USER, // Default role is 'user' if not specified.
     },
 }, {
-    timestamps: true,
+    timestamps: true, // Automatically add `createdAt` and `updatedAt` fields.
 });
-// Pre-save hook to hash password before saving
+// Mongoose pre-save middleware to hash the password before saving a user document.
+// This ensures that plain text passwords are not stored in the database.
 userSchema.pre('save', async function (next) {
-    // Only hash the password if it has been modified (or is new)
+    // Only hash the password if it has been modified (or is new).
     if (!this.isModified('password'))
         return next();
     try {
-        // Generate a salt
-        const salt = await bcrypt_1.default.genSalt(10);
-        // Hash the password along with the new salt
-        this.password = await bcrypt_1.default.hash(this.password, salt);
-        next();
+        const saltRounds = 10; // Cost factor for bcrypt hashing (higher is more secure but slower).
+        const salt = await bcrypt_1.default.genSalt(saltRounds); // Generate a salt.
+        this.password = await bcrypt_1.default.hash(this.password, salt); // Hash the password with the salt.
+        next(); // Proceed to save the document.
     }
     catch (error) {
+        // If an error occurs during hashing, pass it to the next middleware (error handler).
         next(error);
     }
 });
-// Method to compare password for login
+// Instance method on the User model to compare a candidate password with the stored hashed password.
+// Used during the login process to verify user credentials.
 userSchema.methods.comparePassword = async function (candidatePassword) {
+    // `bcrypt.compare` securely compares the plain text candidate password with the stored hash.
     return bcrypt_1.default.compare(candidatePassword, this.password);
 };
-// Create and export User model
+// Create and export the Mongoose model for Users.
+// This model provides an interface to the 'users' collection in MongoDB.
 exports.User = mongoose_1.default.model('User', userSchema);
 //# sourceMappingURL=User.js.map

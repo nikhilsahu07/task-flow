@@ -4,28 +4,42 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { TaskFormData, taskSchema } from '../../api/taskApi';
 import { TaskPriority, TaskStatus, Task } from '../../types';
 
+/**
+ * Props for the TaskForm component.
+ */
 interface TaskFormProps {
+  /** Callback function to handle form submission with task data. */
   onSubmit: (data: TaskFormData) => void;
+  /** Optional initial data for the task form, used for editing existing tasks. */
   initialData?: Task;
+  /** Boolean indicating if the form is currently submitting (loading state). */
   isLoading: boolean;
 }
 
+/**
+ * TaskForm component provides a form for creating or editing tasks.
+ * It uses React Hook Form for form handling and Zod for validation.
+ */
 const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, initialData, isLoading }) => {
-  // Set up form with React Hook Form and Zod
+  // Initialize react-hook-form.
+  // `zodResolver` integrates Zod for schema-based validation.
+  // `defaultValues` are populated from `initialData` if provided (for editing),
+  // otherwise, they are set to defaults for a new task.
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
+    register, // Function to connect form inputs to react-hook-form
+    handleSubmit, // Handles form submission and validation
+    formState: { errors }, // Contains form state, including any validation errors
   } = useForm<TaskFormData>({
-    resolver: zodResolver(taskSchema),
+    resolver: zodResolver(taskSchema), // Use Zod schema for validation
     defaultValues: initialData
       ? {
           title: initialData.title,
           description: initialData.description,
           status: initialData.status,
           priority: initialData.priority,
+          // Ensure dueDate is in YYYY-MM-DD format for the date input
           dueDate: initialData.dueDate ? initialData.dueDate.split('T')[0] : '',
-          assignedTo: initialData.assignedTo?._id,
+          assignedTo: initialData.assignedTo?._id, // Store only the ID of the assigned user
         }
       : {
           title: '',

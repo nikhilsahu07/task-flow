@@ -1,122 +1,120 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { PlusCircle, AlertTriangle } from 'lucide-react';
-import { getTasks, deleteTask, updateTask } from '../api/taskApi';
-import { Task, TaskStatus } from '../types';
-import TaskColumn from '../components/tasks/TaskColumn';
-import ConfirmDialog from '../components/common/ConfirmDialog';
+import { Link } from 'react-router-dom'; // For navigation, e.g., to create task page
+import { toast } from 'react-toastify'; // For displaying notifications (success/error messages)
+import { PlusCircle, AlertTriangle } from 'lucide-react'; // Icons for UI elements
+import { getTasks, deleteTask, updateTask } from '../api/taskApi'; // API functions for task operations
+import { Task, TaskStatus } from '../types'; // TypeScript types for Task and TaskStatus
+import TaskColumn from '../components/tasks/TaskColumn'; // Component to display tasks in columns
+import ConfirmDialog from '../components/common/ConfirmDialog'; // Reusable dialog for confirmations
 
+// DashboardPage serves as the main view for managing tasks, displaying them in status columns.
 const DashboardPage: React.FC = () => {
+  // State for tasks, loading status, and error messages.
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Dialog state
+  // State for managing the delete confirmation dialog.
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
+  const [taskToDelete, setTaskToDelete] = useState<string | null>(null); // ID of the task marked for deletion
 
-  // Fetch tasks on component mount
+  // Fetches tasks when the component mounts.
   useEffect(() => {
     const fetchTasks = async () => {
       setIsLoading(true);
       setError(null);
-
       try {
-        const response = await getTasks({ limit: 10 });
-
+        // Fetch a limited number of tasks for the dashboard view.
+        const response = await getTasks({ limit: 100 }); // Increased limit to show more tasks initially
         if (response.success) {
           setTasks(response.data?.tasks || []);
         } else {
-          setError(response.error?.toString() || 'Error fetching tasks');
+          setError(response.error?.toString() || 'Failed to fetch tasks.');
+          toast.error(response.error?.toString() || 'Failed to fetch tasks.');
         }
       } catch (_err) {
-        setError('An unexpected error occurred');
+        setError('An unexpected error occurred while fetching tasks.');
+        toast.error('An unexpected error occurred while fetching tasks.');
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchTasks();
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once on mount.
 
-  // Handle opening the delete confirmation dialog
+  // Opens the delete confirmation dialog and sets the task to be deleted.
   const handleOpenDeleteDialog = (taskId: string) => {
     setTaskToDelete(taskId);
     setIsDeleteDialogOpen(true);
   };
 
-  // Handle canceling task deletion
+  // Closes the delete confirmation dialog and clears the task to be deleted.
   const handleCancelDelete = () => {
     setIsDeleteDialogOpen(false);
     setTaskToDelete(null);
   };
 
-  // Handle confirming task deletion
+  // Handles the actual deletion of a task after confirmation.
   const handleConfirmDelete = async () => {
-    if (!taskToDelete) return;
+    if (!taskToDelete) return; // Guard against no task ID selected
 
     try {
       const response = await deleteTask(taskToDelete);
-
       if (response.success) {
-        // Remove the deleted task from the list
+        // Optimistically remove the task from the local state.
         setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskToDelete));
-        toast.success('Task deleted successfully');
+        toast.success('Task deleted successfully!');
       } else {
-        toast.error(response.error?.toString() || 'Error deleting task');
+        toast.error(response.error?.toString() || 'Failed to delete task.');
       }
     } catch (_err) {
-      toast.error('An unexpected error occurred');
+      toast.error('An unexpected error occurred during task deletion.');
     } finally {
-      // Close the dialog and reset state
+      // Always close the dialog and reset state regardless of outcome.
       setIsDeleteDialogOpen(false);
       setTaskToDelete(null);
     }
   };
 
-  // Handle task status change via drag and drop
+  // Handles dropping a task into a new status column (drag and drop).
   const handleTaskDrop = async (taskId: string, newStatus: TaskStatus) => {
-    // Find the task to update
     const taskToUpdate = tasks.find((task) => task._id === taskId);
+    if (!taskToUpdate || taskToUpdate.status === newStatus) {
+      // Do nothing if task not found or status is unchanged.
+      return;
+    }
 
-    if (!taskToUpdate) return;
+    // Store the original status for potential rollback.
+    const originalStatus = taskToUpdate.status;
 
-    // Skip if the status hasn't changed
-    if (taskToUpdate.status === newStatus) return;
+    // Optimistic UI update: Change task status locally first for responsiveness.
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task._id === taskId ? { ...task, status: newStatus } : task)),
+    );
 
     try {
-      // Optimistically update the UI
-      setTasks((prevTasks) =>
-        prevTasks.map((task) => (task._id === taskId ? { ...task, status: newStatus } : task)),
-      );
-
-      // Update in the backend
-      const response = await updateTask(taskId, { status: newStatus });
-
+      const response = await updateTask(taskId, { status: newStatus }); // API call to update task status
       if (response.success) {
-        toast.success(`Task moved to ${formatStatus(newStatus)}`);
+        toast.success(`Task moved to ${formatStatus(newStatus)}.`);
       } else {
-        // Revert if the update fails
+        // Revert UI update if API call fails.
         setTasks((prevTasks) =>
           prevTasks.map((task) =>
-            task._id === taskId ? { ...task, status: taskToUpdate.status } : task,
+            task._id === taskId ? { ...task, status: originalStatus } : task,
           ),
         );
-        toast.error(response.error?.toString() || 'Error updating task');
+        toast.error(response.error?.toString() || 'Failed to update task status.');
       }
     } catch (_err) {
-      // Revert on error
+      // Revert UI update on unexpected error.
       setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task._id === taskId ? { ...task, status: taskToUpdate.status } : task,
-        ),
+        prevTasks.map((task) => (task._id === taskId ? { ...task, status: originalStatus } : task)),
       );
-      toast.error('An unexpected error occurred');
+      toast.error('An unexpected error occurred while updating task status.');
     }
   };
 
-  // Format status text for display
+  // Helper function to convert TaskStatus enum to a human-readable string.
   const formatStatus = (status: TaskStatus) => {
     switch (status) {
       case TaskStatus.TODO:
@@ -128,35 +126,36 @@ const DashboardPage: React.FC = () => {
       case TaskStatus.DONE:
         return 'Done';
       default:
-        return status;
+        return status; // Fallback for any unhandled status
     }
   };
 
-  // Group tasks by status
+  // Filter tasks into separate arrays based on their status for column display.
   const todoTasks = tasks.filter((task) => task.status === TaskStatus.TODO);
   const inProgressTasks = tasks.filter((task) => task.status === TaskStatus.IN_PROGRESS);
   const reviewTasks = tasks.filter((task) => task.status === TaskStatus.REVIEW);
   const doneTasks = tasks.filter((task) => task.status === TaskStatus.DONE);
 
-  // Find task title for confirmation dialog
+  // Get the title of the task being considered for deletion for display in the confirmation dialog.
   const taskToDeleteTitle = taskToDelete
-    ? tasks.find((task) => task._id === taskToDelete)?.title || 'this task'
+    ? tasks.find((task) => task._id === taskToDelete)?.title || 'this task' // Default if title not found
     : '';
 
   return (
     <>
       <div className="max-w-6xl mx-auto">
         <div className="mb-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Task Dashboard</h1>
           <Link
-            to="/tasks/create"
+            to="/tasks/create" // Link to the page for creating new tasks
             className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
           >
             <PlusCircle className="h-5 w-5 mr-2" />
-            New Task
+            Create New Task
           </Link>
         </div>
 
+        {/* Display error message if any error occurred during data fetching. */}
         {error && (
           <div className="bg-red-50 text-red-600 p-4 rounded-md mb-6 flex items-center">
             <AlertTriangle className="h-5 w-5 mr-2" />
@@ -164,23 +163,22 @@ const DashboardPage: React.FC = () => {
           </div>
         )}
 
+        {/* Display loading spinner while tasks are being fetched. */}
         {isLoading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading tasks...</p>
+            <p className="text-gray-600">Loading tasks, please wait...</p>
           </div>
         ) : (
+          // Render task columns once data is loaded.
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* To Do Column */}
             <TaskColumn
               title="To Do"
               status={TaskStatus.TODO}
               tasks={todoTasks}
-              onDelete={handleOpenDeleteDialog}
-              onTaskDrop={handleTaskDrop}
+              onDelete={handleOpenDeleteDialog} // Pass delete handler to each column
+              onTaskDrop={handleTaskDrop} // Pass drop handler for status updates
             />
-
-            {/* In Progress Column */}
             <TaskColumn
               title="In Progress"
               status={TaskStatus.IN_PROGRESS}
@@ -188,8 +186,6 @@ const DashboardPage: React.FC = () => {
               onDelete={handleOpenDeleteDialog}
               onTaskDrop={handleTaskDrop}
             />
-
-            {/* Review Column */}
             <TaskColumn
               title="Review"
               status={TaskStatus.REVIEW}
@@ -197,8 +193,6 @@ const DashboardPage: React.FC = () => {
               onDelete={handleOpenDeleteDialog}
               onTaskDrop={handleTaskDrop}
             />
-
-            {/* Done Column */}
             <TaskColumn
               title="Done"
               status={TaskStatus.DONE}
@@ -209,19 +203,22 @@ const DashboardPage: React.FC = () => {
           </div>
         )}
 
-        <div className="mt-8 text-right">
-          <Link to="/tasks" className="text-blue-600 hover:text-blue-800 font-medium">
-            View all tasks
-          </Link>
-        </div>
+        {/* Link to view all tasks, useful if dashboard shows a subset. */}
+        {!isLoading && tasks.length > 0 && (
+          <div className="mt-8 text-right">
+            <Link to="/tasks" className="text-blue-600 hover:text-blue-800 font-medium">
+              View All Tasks
+            </Link>
+          </div>
+        )}
       </div>
 
-      {/* Confirmation Dialog */}
+      {/* Confirmation dialog for deleting tasks. */}
       <ConfirmDialog
         isOpen={isDeleteDialogOpen}
-        title="Delete Task"
-        message={`Are you sure you want to delete "${taskToDeleteTitle}"? This action cannot be undone.`}
-        confirmText="Delete"
+        title="Confirm Task Deletion"
+        message={`Are you sure you want to permanently delete "${taskToDeleteTitle}"? This action cannot be undone.`}
+        confirmText="Delete Task"
         cancelText="Cancel"
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}

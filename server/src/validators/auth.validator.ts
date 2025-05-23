@@ -1,54 +1,61 @@
-import { z } from 'zod';
-import { UserRole } from '../types';
+import { z } from 'zod'; // Zod is a TypeScript-first schema declaration and validation library
+import { UserRole } from '../types'; // Import UserRole enum for role validation
 
-// Registration request validation schema
+// Schema for validating user registration requests.
+// Ensures name, email, and password meet specific criteria.
 export const registerSchema = z.object({
   name: z
     .string()
-    .min(2, 'Name must be at least 2 characters')
+    .min(2, 'Name must be at least 2 characters long')
     .max(50, 'Name cannot exceed 50 characters'),
   email: z
     .string()
-    .email('Invalid email format')
-    .min(5, 'Email must be at least 5 characters')
+    .email('Please enter a valid email address')
+    .min(5, 'Email must be at least 5 characters long')
     .max(100, 'Email cannot exceed 100 characters'),
   password: z
     .string()
-    .min(6, 'Password must be at least 6 characters')
+    .min(6, 'Password must be at least 6 characters long')
     .max(100, 'Password cannot exceed 100 characters')
+    // Enforce password complexity: at least one lowercase, one uppercase, and one digit.
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      'Password must contain at least one uppercase letter, one lowercase letter, and one number',
+      'Password requires an uppercase letter, a lowercase letter, and a number',
     ),
+  // Role is optional and defaults to USER if not provided.
   role: z.enum([UserRole.ADMIN, UserRole.USER]).optional().default(UserRole.USER),
 });
 
-// Login request validation schema
+// Schema for validating user login requests.
+// Requires email and a non-empty password.
 export const loginSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(1, 'Password is required'),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(1, 'Password is required'), // Simple check for presence
 });
 
-// Password update validation schema
+// Schema for validating password update requests.
+// Ensures current password is provided, new password meets complexity, and new passwords match.
 export const passwordUpdateSchema = z
   .object({
     currentPassword: z.string().min(1, 'Current password is required'),
     newPassword: z
       .string()
-      .min(6, 'New password must be at least 6 characters')
+      .min(6, 'New password must be at least 6 characters long')
       .max(100, 'New password cannot exceed 100 characters')
+      // Same complexity rules as registration password.
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        'Password must contain at least one uppercase letter, one lowercase letter, and one number',
+        'New password requires an uppercase letter, a lowercase letter, and a number',
       ),
-    confirmPassword: z.string().min(1, 'Confirm password is required'),
+    confirmPassword: z.string().min(1, 'Please confirm your new password'),
   })
+  // Custom refinement to check if newPassword and confirmPassword match.
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
+    message: 'New passwords do not match',
+    path: ['confirmPassword'], // Associates the error with the confirmPassword field
   });
 
-// Types inferred from the schemas
+// TypeScript types inferred from the Zod schemas for use in controllers and services.
 export type RegisterRequest = z.infer<typeof registerSchema>;
 export type LoginRequest = z.infer<typeof loginSchema>;
 export type PasswordUpdateRequest = z.infer<typeof passwordUpdateSchema>;

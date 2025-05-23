@@ -13,19 +13,17 @@
  * - Controller functions to handle business logic
  */
 
-import { Router } from 'express';
-import { register, login, getProfile, updatePassword } from '../controllers/auth.controller';
-import { validate } from '../middleware/validation.middleware';
-import { registerSchema, loginSchema, passwordUpdateSchema } from '../validators/auth.validator';
-import { authenticate } from '../middleware/auth.middleware';
+import { Router } from 'express'; // Express Router for defining API routes
+import { register, login, getProfile, updatePassword } from '../controllers/auth.controller'; // Import controllers that handle the business logic for each auth endpoint
+import { validate } from '../middleware/validation.middleware'; // Middleware for request body validation using Zod schemas
+import { registerSchema, loginSchema, passwordUpdateSchema } from '../validators/auth.validator'; // Zod schemas for validating registration, login, and password update request data
+import { authenticate } from '../middleware/auth.middleware'; // Middleware to protect routes by requiring JWT authentication
 
 // Create a new router instance
-const router = Router();
+const router = Router(); // Initialize a new Express router for authentication routes
 
-/**
- * Public Routes (No Authentication Required)
- * These routes are accessible to anyone, even without being logged in
- */
+// --- Public Authentication Routes ---
+// These routes do not require prior authentication (e.g., a JWT token).
 
 /**
  * POST /api/auth/register
@@ -33,7 +31,7 @@ const router = Router();
  * Creates a new user account.
  * Validates the request body using registerSchema before processing.
  */
-router.post('/register', validate(registerSchema), register);
+router.post('/register', validate(registerSchema), register); // POST /api/auth/register - Handles new user registration.
 
 /**
  * POST /api/auth/login
@@ -41,13 +39,10 @@ router.post('/register', validate(registerSchema), register);
  * Authenticates a user and returns a JWT token.
  * Validates the request body using loginSchema before processing.
  */
-router.post('/login', validate(loginSchema), login);
+router.post('/login', validate(loginSchema), login); // POST /api/auth/login - Handles user login and issues a JWT.
 
-/**
- * Protected Routes (Authentication Required)
- * These routes require a valid JWT token in the Authorization header
- * The authenticate middleware verifies the token before proceeding
- */
+// --- Protected Authentication Routes ---
+// These routes require a valid JWT token. The `authenticate` middleware handles token verification.
 
 /**
  * GET /api/auth/profile
@@ -55,7 +50,7 @@ router.post('/login', validate(loginSchema), login);
  * Returns the profile information of the currently logged-in user.
  * Uses the authenticate middleware to ensure the user is logged in.
  */
-router.get('/profile', authenticate, getProfile);
+router.get('/profile', authenticate, getProfile); // GET /api/auth/profile - Fetches the profile of the currently authenticated user.
 
 /**
  * PUT /api/auth/update-password
@@ -64,6 +59,11 @@ router.get('/profile', authenticate, getProfile);
  * Uses the authenticate middleware to ensure the user is logged in.
  * Validates the request body using passwordUpdateSchema before processing.
  */
-router.put('/update-password', authenticate, validate(passwordUpdateSchema), updatePassword);
+router.put(
+  '/update-password',
+  authenticate, // First, ensure user is authenticated
+  validate(passwordUpdateSchema), // Then, validate the incoming password data
+  updatePassword, // Finally, call the controller to update the password
+); // PUT /api/auth/update-password - Allows an authenticated user to update their password.
 
-export default router;
+export default router; // Export the configured router to be used in the main server setup

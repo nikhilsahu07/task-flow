@@ -12,9 +12,29 @@ export const taskSchema = z.object({
     .string()
     .min(5, 'Description must be at least 5 characters')
     .max(1000, 'Description cannot exceed 1000 characters'),
-  priority: z.enum([TaskPriority.LOW, TaskPriority.MEDIUM, TaskPriority.HIGH]),
-  status: z.enum([TaskStatus.TODO, TaskStatus.IN_PROGRESS, TaskStatus.REVIEW, TaskStatus.DONE]),
-  dueDate: z.string().optional().nullable(),
+  priority: z
+    .enum([TaskPriority.LOW, TaskPriority.MEDIUM, TaskPriority.HIGH])
+    .default(TaskPriority.MEDIUM),
+  status: z
+    .enum([TaskStatus.TODO, TaskStatus.IN_PROGRESS, TaskStatus.REVIEW, TaskStatus.DONE])
+    .default(TaskStatus.TODO),
+  dueDate: z
+    .preprocess(
+      (arg) => {
+        if (typeof arg === 'string' && arg.trim() === '') {
+          return null; // Convert empty string to null
+        }
+        if (typeof arg === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(arg)) {
+          return `${arg}T00:00:00.000Z`; // Convert YYYY-MM-DD to ISO datetime
+        }
+        return arg; // Pass through other values (like actual ISO strings or null/undefined)
+      },
+      z
+        .string()
+        .datetime({ message: 'Invalid date format for due date. Please use ISO 8601 format.' }),
+    )
+    .optional()
+    .nullable(),
   assignedTo: z.string().optional().nullable(),
 });
 

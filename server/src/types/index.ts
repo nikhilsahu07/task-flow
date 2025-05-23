@@ -1,76 +1,81 @@
 import mongoose from 'mongoose';
 
-// Common TypeScript types used throughout the application
+// This file defines common TypeScript types and enums used across the server-side application.
 
-// Utility type for API responses
+// Generic type for standardizing API responses.
+// Provides a consistent structure for success/error messages and data payloads.
 export type ApiResponse<T> = {
-  success: boolean;
-  message: string;
-  data?: T;
-  error?: string;
+  success: boolean; // Indicates if the operation was successful
+  message: string; // A human-readable message about the outcome
+  data?: T; // The actual data returned by the API (if any)
+  error?: string; // Error message if the operation failed
 };
 
-// User roles enum
+// UserRole defines the possible roles a user can have.
 export enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
+  ADMIN = 'admin', // Administrator with elevated privileges
+  USER = 'user', // Standard user
 }
 
-// Base user interface
+// IUser defines the complete structure of a user object, including sensitive data (password).
+// This is typically used for database models or internal representations.
 export interface IUser {
-  _id?: string;
+  _id?: string; // Optional: Database-generated unique identifier (e.g., MongoDB ObjectId as string)
   name: string;
   email: string;
-  password: string;
+  password: string; // Hashed password
   role: UserRole;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: Date; // Optional: Timestamp of user creation
+  updatedAt?: Date; // Optional: Timestamp of last user update
 }
 
-// User without sensitive data for return values
+// UserWithoutPassword is a utility type that omits the password field from IUser.
+// Useful for returning user data in API responses without exposing the hashed password.
 export type UserWithoutPassword = Omit<IUser, 'password'>;
 
-// Task priority enum
+// TaskPriority defines the different priority levels a task can have.
 export enum TaskPriority {
   LOW = 'low',
   MEDIUM = 'medium',
   HIGH = 'high',
 }
 
-// Task status enum
+// TaskStatus defines the various stages or states a task can be in.
 export enum TaskStatus {
-  TODO = 'todo',
-  IN_PROGRESS = 'in_progress',
-  REVIEW = 'review',
-  DONE = 'done',
+  TODO = 'todo', // Task is pending
+  IN_PROGRESS = 'in_progress', // Task is actively being worked on
+  REVIEW = 'review', // Task is completed and awaiting review
+  DONE = 'done', // Task is fully completed
 }
 
-// Base task interface
+// ITask defines the structure of a task object.
 export interface ITask {
-  _id?: string | mongoose.Types.ObjectId;
+  _id?: string | mongoose.Types.ObjectId; // Optional: Database ID (string or ObjectId)
   title: string;
   description: string;
   status: TaskStatus;
   priority: TaskPriority;
-  dueDate?: string | Date;
+  dueDate?: string | Date; // Optional: Due date, can be a string (e.g., ISO) or Date object
+  // createdBy and assignedTo can be ObjectIds or populated user objects (Record<string, any>).
   createdBy: string | mongoose.Types.ObjectId | Record<string, any>;
   assignedTo?: string | mongoose.Types.ObjectId | Record<string, any>;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: Date; // Optional: Timestamp of task creation
+  updatedAt?: Date; // Optional: Timestamp of last task update
 }
 
-// Request with authenticated user
+// AuthRequest extends the Express Request type to include an optional 'user' object.
+// This 'user' object is typically populated by authentication middleware with JWT payload data.
 export interface AuthRequest extends Express.Request {
   user?: {
-    id: string;
-    email: string;
-    role: UserRole;
+    id: string; // ID of the authenticated user
+    email: string; // Email of the authenticated user
+    role: UserRole; // Role of the authenticated user
   };
 }
 
-// JWT payload type
+// JwtPayload defines the structure of the data embedded within a JWT.
 export interface JwtPayload {
-  id: string;
-  email: string;
-  role: UserRole;
+  id: string; // User ID
+  email: string; // User email
+  role: UserRole; // User role
 }

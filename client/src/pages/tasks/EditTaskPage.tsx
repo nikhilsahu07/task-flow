@@ -6,103 +6,119 @@ import { getTaskById, updateTask, TaskFormData } from '../../api/taskApi';
 import { Task } from '../../types';
 import TaskForm from '../../components/tasks/TaskForm';
 
+// EditTaskPage allows users to modify an existing task.
 const EditTaskPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  // State for storing the task data to be edited
   const [task, setTask] = useState<Task | null>(null);
+  // State for loading indicator while fetching initial task data
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  // State for loading indicator during form submission (saving)
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  // State for storing any errors during API calls
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch task on component mount
+  // useEffect hook to fetch the task data when the component mounts or the ID changes.
   useEffect(() => {
     const fetchTask = async () => {
-      if (!id) return;
+      if (!id) {
+        setError('Task ID is missing.');
+        setIsLoading(false);
+        return;
+      }
 
       setIsLoading(true);
       setError(null);
 
       try {
         const response = await getTaskById(id);
-
         if (response.success && response.data) {
           setTask(response.data.task);
         } else {
-          setError(response.error?.toString() || 'Error fetching task');
+          setError(response.error?.toString() || 'Error fetching task details for editing.');
+          toast.error(response.error?.toString() || 'Error fetching task details.');
         }
       } catch (_err) {
-        setError('An unexpected error occurred');
+        setError('An unexpected error occurred while fetching the task for editing.');
+        toast.error('An unexpected error occurred while fetching the task.');
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchTask();
-  }, [id]);
+  }, [id]); // Re-fetch if the task ID changes
 
-  // Handle form submission
+  // Handles the submission of the edited task data.
   const handleSubmit = async (data: TaskFormData) => {
-    if (!id) return;
+    if (!id) return; // Should not happen if task is loaded
 
-    setIsSaving(true);
+    setIsSaving(true); // Indicate that saving is in progress
 
     try {
-      const response = await updateTask(id, data);
-
+      const response = await updateTask(id, data); // Call API to update the task
       if (response.success) {
-        toast.success('Task updated successfully');
-        navigate(`/tasks/${id}`);
+        toast.success('Task updated successfully!');
+        navigate(`/tasks/${id}`); // Navigate to the task detail page after successful update
       } else {
-        toast.error(response.error?.toString() || 'Error updating task');
+        toast.error(response.error?.toString() || 'Failed to update task.');
       }
     } catch (_err) {
-      toast.error('An unexpected error occurred');
+      toast.error('An unexpected error occurred while updating the task.');
     } finally {
-      setIsSaving(false);
+      setIsSaving(false); // Reset saving state
     }
   };
 
+  // Display loading spinner while initial task data is being fetched.
   if (isLoading) {
     return (
       <div className="text-center py-12">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">Loading task...</p>
+        <p className="text-gray-600">Loading task for editing...</p>
       </div>
     );
   }
 
+  // Display error message if fetching failed or task is not found.
   if (error || !task) {
     return (
       <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <div className="text-center py-8">
-          <p className="text-red-600 mb-4">{error || 'Task not found'}</p>
+          <p className="text-red-600 mb-4">
+            {error || 'Task not found or could not be loaded for editing.'}
+          </p>
           <Link
             to="/tasks"
             className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
           >
             <ArrowLeft className="h-5 w-5 mr-2" />
-            Back to Tasks
+            Return to Task List
           </Link>
         </div>
       </div>
     );
   }
 
+  // Render the task form with initial data for editing.
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Back button */}
+      {/* Back navigation link to the task detail page */}
       <div className="mb-6">
         <Link
           to={`/tasks/${id}`}
           className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to task
+          Cancel Edit & Back to Task
         </Link>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Edit Task</h1>
+      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Edit Task</h1>
+        {/* TaskForm is pre-filled with existing task data and handles the update submission. */}
         <TaskForm onSubmit={handleSubmit} initialData={task} isLoading={isSaving} />
       </div>
     </div>

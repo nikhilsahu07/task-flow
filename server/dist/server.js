@@ -11,11 +11,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-require("express-async-errors"); // Allows async route handlers to automatically catch errors
+require("express-async-errors"); // Automatically catches errors in async route handlers
 const dotenv_1 = __importDefault(require("dotenv")); // For loading environment variables
 const mongoose_1 = __importDefault(require("mongoose")); // MongoDB ORM
 const cors_1 = __importDefault(require("cors")); // Cross-Origin Resource Sharing middleware
-const helmet_1 = __importDefault(require("helmet")); // Security headers middleware
+const helmet_1 = __importDefault(require("helmet")); // Basic security headers
 const uuid_1 = require("uuid"); // For generating unique request IDs
 // Import route handlers
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
@@ -72,27 +72,30 @@ app.get('/health', (_req, res) => {
  * These endpoints provide test data even when MongoDB isn't connected.
  * Useful for development, testing, and demonstration purposes.
  */
-// Health check that includes database connection status
+// More detailed health check including database connection status
+// Note: This overrides the /api/health if it were defined before this under the same path prefix.
+// It might be better to have a single, comprehensive health check.
 app.get('/api/health', (_req, res) => {
     res.status(200).json({
         status: 'up',
         timestamp: new Date().toISOString(),
-        databaseConnected: !!mongoose_1.default.connection.readyState,
+        databaseConnected: mongoose_1.default.connection.readyState === 1, // 1 means connected, 0 disconnected, 2 connecting, 3 disconnecting
     });
 });
-// Mock login endpoint for testing
+// Mock login endpoint - useful for frontend development without a live backend/DB.
+// IMPORTANT: This should be REMOVED or DISABLED in production environments for security reasons.
 app.post('/api/auth/login', (req, res) => {
     const { email, password } = req.body;
-    // Simple validation with hardcoded credentials
+    // WARNING: Hardcoded credentials are a major security risk. For mock/testing purposes ONLY.
     if (email === 'user@example.com' && password === 'password') {
         res.status(200).json({
             success: true,
-            message: 'Login successful',
+            message: 'Mock login successful (DEVELOPMENT ONLY)',
             data: {
-                token: 'mock-jwt-token',
+                token: 'mock-jwt-token-string-for-testing-only',
                 user: {
-                    id: '1',
-                    name: 'Test User',
+                    id: 'mock-user-id-1',
+                    name: 'Mock Test User',
                     email: 'user@example.com',
                     role: 'user',
                 },
@@ -102,53 +105,42 @@ app.post('/api/auth/login', (req, res) => {
     else {
         res.status(401).json({
             success: false,
-            message: 'Authentication failed',
-            error: 'Invalid email or password',
+            message: 'Mock authentication failed (DEVELOPMENT ONLY)',
+            error: 'Invalid mock credentials',
         });
     }
 });
-// Mock tasks endpoint that returns sample tasks data
+// Mock tasks endpoint - provides sample data for frontend development.
+// IMPORTANT: This should be REMOVED or DISABLED in production environments.
 app.get('/api/tasks', (_req, res) => {
+    // This endpoint simulates fetching tasks without needing a database connection.
     res.status(200).json({
         success: true,
-        message: 'Tasks retrieved successfully',
+        message: 'Mock tasks retrieved successfully (DEVELOPMENT ONLY)',
         data: {
             tasks: [
                 {
-                    _id: '1',
-                    title: 'Complete project setup',
-                    description: 'Set up the project structure and dependencies',
+                    _id: 'mock-task-id-1',
+                    title: 'Develop frontend UI for dashboard',
+                    description: 'Implement the main dashboard and task views using React components.',
                     status: 'in_progress',
                     priority: 'high',
-                    createdBy: {
-                        _id: '1',
-                        name: 'Test User',
-                        email: 'user@example.com',
-                    },
-                    createdAt: new Date().toISOString(),
+                    createdBy: { _id: 'mock-user-id-1', name: 'Mock Test User' },
+                    createdAt: new Date(Date.now() - 86400000).toISOString(),
                     updatedAt: new Date().toISOString(),
-                },
+                }, // Yesterday
                 {
-                    _id: '2',
-                    title: 'Design user interface',
-                    description: 'Create wireframes and design mockups',
+                    _id: 'mock-task-id-2',
+                    title: 'Setup backend API endpoints',
+                    description: 'Create all necessary API endpoints for tasks and authentication using Express.',
                     status: 'todo',
                     priority: 'medium',
-                    createdBy: {
-                        _id: '1',
-                        name: 'Test User',
-                        email: 'user@example.com',
-                    },
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                },
+                    createdBy: { _id: 'mock-user-id-1', name: 'Mock Test User' },
+                    createdAt: new Date(Date.now() - 172800000).toISOString(),
+                    updatedAt: new Date(Date.now() - 86400000).toISOString(),
+                }, // Two days ago, updated yesterday
             ],
-            pagination: {
-                page: 1,
-                limit: 10,
-                total: 2,
-                pages: 1,
-            },
+            pagination: { page: 1, limit: 10, total: 2, pages: 1 },
         },
     });
 });
@@ -168,7 +160,7 @@ app.use(error_middleware_1.errorHandler);
 // Get port from environment variables or use default port 5000
 const PORT = process.env.PORT || 5000;
 // MongoDB connection string from environment variables or use default
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/taskmanager';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/taskmanager-dev'; // Default to a dev DB
 /**
  * Database Connection
  *
@@ -179,11 +171,12 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/taskmanage
 mongoose_1.default
     .connect(MONGO_URI)
     .then(() => {
-    console.info('Connected to MongoDB');
+    console.info(`Successfully connected to MongoDB: ${mongoose_1.default.connection.name}`); // Log DB name
 })
     .catch((error) => {
-    console.error('Failed to connect to MongoDB:', error);
-    console.warn('Running without database connection. Some features will not work.');
+    console.error('MongoDB connection error:', error.message); // Log only the error message for brevity
+    // Inform that the app is running in a degraded mode if DB connection fails.
+    console.warn('Server is running WITHOUT a live database connection. Features requiring DB access will not work. Mock data may be used if enabled.');
 });
 /**
  * Start Server
