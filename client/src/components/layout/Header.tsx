@@ -12,6 +12,15 @@ const Header: React.FC = () => {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
 
+  // Generate today's date in YYYYMMDD format
+  const getTodayDashboardPath = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `/dashboard/${year}${month}${day}`;
+  };
+
   // Toggle mobile menu
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -75,16 +84,22 @@ const Header: React.FC = () => {
               {user ? (
                 <>
                   <Link
-                    to="/dashboard"
+                    to="/todo-planner"
                     className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
                   >
-                    Dashboard
+                    Todo-Planner
+                  </Link>
+                  <Link
+                    to={getTodayDashboardPath()}
+                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                  >
+                    Today&apos;s Dashboard
                   </Link>
                   <Link
                     to="/tasks"
                     className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
                   >
-                    Tasks
+                    All Tasks
                   </Link>
                   <div className="relative ml-4" ref={profileDropdownRef}>
                     <button
@@ -150,18 +165,25 @@ const Header: React.FC = () => {
               {user ? (
                 <>
                   <Link
-                    to="/dashboard"
+                    to="/todo-planner"
                     className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Dashboard
+                    Todo-Planner
+                  </Link>
+                  <Link
+                    to={getTodayDashboardPath()}
+                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Today&apos;s Dashboard
                   </Link>
                   <Link
                     to="/tasks"
                     className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Tasks
+                    All Tasks
                   </Link>
                   <Link
                     to="/profile"

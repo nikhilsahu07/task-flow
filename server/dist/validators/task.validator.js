@@ -23,11 +23,11 @@ exports.createTaskSchema = zod_1.z.object({
         .enum([types_1.TaskStatus.TODO, types_1.TaskStatus.IN_PROGRESS, types_1.TaskStatus.REVIEW, types_1.TaskStatus.DONE])
         .default(types_1.TaskStatus.TODO),
     // dueDate is an optional string (e.g., ISO date string), can be null.
-    dueDate: zod_1.z
+    dueDate: zod_1.z.preprocess((arg) => (typeof arg === 'string' && arg.trim() === '' ? null : arg), zod_1.z.string().datetime({ message: 'Invalid date format for due date' }).optional().nullable()),
+    // createdFor is now required since all tasks must be associated with a date
+    createdFor: zod_1.z
         .string()
-        .datetime({ message: 'Invalid date format for due date' })
-        .optional()
-        .nullable(),
+        .datetime({ message: 'Invalid date format for createdFor date. Please use ISO 8601 format.' }),
     // assignedTo is an optional string (e.g., user ID), can be null.
     assignedTo: zod_1.z.string().optional().nullable(),
 });
@@ -49,11 +49,11 @@ exports.updateTaskSchema = zod_1.z.object({
     status: zod_1.z
         .enum([types_1.TaskStatus.TODO, types_1.TaskStatus.IN_PROGRESS, types_1.TaskStatus.REVIEW, types_1.TaskStatus.DONE])
         .optional(),
-    dueDate: zod_1.z
+    dueDate: zod_1.z.preprocess((arg) => (typeof arg === 'string' && arg.trim() === '' ? null : arg), zod_1.z.string().datetime({ message: 'Invalid date format for due date' }).optional().nullable()),
+    createdFor: zod_1.z
         .string()
-        .datetime({ message: 'Invalid date format for due date' })
-        .optional()
-        .nullable(),
+        .datetime({ message: 'Invalid date format for createdFor date' })
+        .optional(),
     assignedTo: zod_1.z.string().optional().nullable(),
 });
 // Schema for validating task filtering and pagination query parameters.

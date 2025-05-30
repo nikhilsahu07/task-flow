@@ -64,6 +64,11 @@ const taskSchema = new mongoose_1.Schema({
         type: Date, // Due date for the task.
         // Note: Consider adding validation, e.g., dueDate cannot be in the past for new tasks.
     },
+    createdFor: {
+        type: Date, // Date for which the task was created (chosen by user when creating task).
+        required: [true, 'Task must be associated with a specific date.'], // This field is now required
+        // This represents the target date/tile the user selected in the todo planner.
+    },
     createdBy: {
         type: mongoose_1.Schema.Types.ObjectId, // Reference to the User who created the task.
         ref: 'User', // Links this field to the 'User' model.
@@ -86,6 +91,8 @@ taskSchema.index({ assignedTo: 1 });
 taskSchema.index({ status: 1 });
 // Indexing `priority` can speed up filtering or sorting tasks by their priority.
 taskSchema.index({ priority: 1 });
+// Indexing `createdFor` can speed up filtering tasks by their target date.
+taskSchema.index({ createdFor: 1 });
 // Create and export the Mongoose model for Tasks.
 // This model provides an interface to the 'tasks' collection in MongoDB.
 exports.Task = mongoose_1.default.model('Task', taskSchema);

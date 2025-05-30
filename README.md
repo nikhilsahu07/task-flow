@@ -133,6 +133,27 @@ npm run format
 - **Vite**: Build tool and development server
 - **Concurrently**: Run multiple commands concurrently
 
+## API Endpoints
+
+### Date-Specific Task Endpoints
+
+- `GET /api/tasks/dashboard/:date` - Get tasks for specific date (YYYYMMDD format)
+- `POST /api/tasks/create/:date` - Create task for specific date (YYYYMMDD format)
+
+### Standard Task Endpoints
+
+- `GET /api/tasks` - Get all tasks (with filtering and pagination)
+- `GET /api/tasks/:id` - Get specific task by ID
+- `PUT /api/tasks/:id` - Update task
+- `DELETE /api/tasks/:id` - Delete task
+
+### Authentication Endpoints
+
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+
+**Note**: Date parameters use YYYYMMDD format (e.g., 20231225 for December 25, 2023).
+
 ## License
 
 ISC

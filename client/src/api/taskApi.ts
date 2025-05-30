@@ -35,6 +35,20 @@ export const taskSchema = z.object({
     )
     .optional()
     .nullable(),
+  createdFor: z.preprocess(
+    (arg) => {
+      if (typeof arg === 'string' && arg.trim() === '') {
+        return null; // Convert empty string to null
+      }
+      if (typeof arg === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(arg)) {
+        return `${arg}T00:00:00.000Z`; // Convert YYYY-MM-DD to ISO datetime
+      }
+      return arg; // Pass through other values (like actual ISO strings or null/undefined)
+    },
+    z.string().datetime({
+      message: 'Invalid date format for createdFor date. Please use ISO 8601 format.',
+    }),
+  ),
   assignedTo: z.string().optional().nullable(),
 });
 
@@ -57,9 +71,11 @@ interface TaskListResponse {
  */
 export const createTask = async (taskData: TaskFormData): Promise<ApiResponse<{ task: Task }>> => {
   try {
+    console.log('Creating task with data:', JSON.stringify(taskData, null, 2));
     const { data } = await api.post<ApiResponse<{ task: Task }>>('/tasks', taskData);
     return data;
   } catch (error: any) {
+    console.error('Task creation failed:', error.response?.data || error.message);
     return {
       success: false,
       message: 'Failed to create task',
@@ -164,6 +180,89 @@ export const deleteTask = async (taskId: string): Promise<ApiResponse<null>> => 
     return {
       success: false,
       message: 'Failed to delete task',
+      error: error.response?.data?.error || error.message,
+    };
+  }
+};
+
+/**
+ * Get tasks for a specific date (YYYYMMDD format)
+ */
+export const getTasksByDate = async (
+  date: string,
+): Promise<
+  ApiResponse<{
+    tasks: Task[];
+    date: string;
+    formattedDate: string;
+  }>
+> => {
+  try {
+    // Validate date format
+    if (!/^\d{8}$/.test(date)) {
+      return {
+        success: false,
+        message: 'Invalid date format',
+        error: 'Date must be in YYYYMMDD format',
+      };
+    }
+
+    const { data } = await api.get<
+      ApiResponse<{
+        tasks: Task[];
+        date: string;
+        formattedDate: string;
+      }>
+    >(`/tasks/dashboard/${date}`);
+
+    return data;
+  } catch (error: any) {
+    return {
+      success: false,
+      message: 'Failed to fetch tasks for date',
+      error: error.response?.data?.error || error.message,
+    };
+  }
+};
+
+/**
+ * Create a task for a specific date (YYYYMMDD format)
+ */
+export const createTaskForDate = async (
+  date: string,
+  taskData: TaskFormData,
+): Promise<
+  ApiResponse<{
+    task: Task;
+    date: string;
+    formattedDate: string;
+  }>
+> => {
+  try {
+    // Validate date format
+    if (!/^\d{8}$/.test(date)) {
+      return {
+        success: false,
+        message: 'Invalid date format',
+        error: 'Date must be in YYYYMMDD format',
+      };
+    }
+
+    console.log(`Creating task for date ${date} with data:`, JSON.stringify(taskData, null, 2));
+    const { data } = await api.post<
+      ApiResponse<{
+        task: Task;
+        date: string;
+        formattedDate: string;
+      }>
+    >(`/tasks/create/${date}`, taskData);
+
+    return data;
+  } catch (error: any) {
+    console.error('Task creation for date failed:', error.response?.data || error.message);
+    return {
+      success: false,
+      message: 'Failed to create task for date',
       error: error.response?.data?.error || error.message,
     };
   }

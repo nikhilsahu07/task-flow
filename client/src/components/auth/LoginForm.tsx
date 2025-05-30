@@ -69,8 +69,8 @@ const LoginForm: React.FC = () => {
         // Update auth context with user data
         authLogin(response.data.user);
 
-        // Redirect to dashboard on successful login
-        navigate('/dashboard');
+        // Redirect to todo planner on successful login
+        navigate('/todo-planner');
       } else {
         // Display error message from the server
         setError(response.error?.toString() || 'Login failed. Please try again.');

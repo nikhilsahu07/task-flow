@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ArrowLeft } from 'lucide-react';
-import { getTaskById, updateTask, TaskFormData } from '../../api/taskApi';
+import { getTaskById, updateTask, TaskFormData, taskSchema } from '../../api/taskApi';
 import { Task } from '../../types';
 import TaskForm from '../../components/tasks/TaskForm';
 
@@ -57,8 +57,20 @@ const EditTaskPage: React.FC = () => {
 
     setIsSaving(true); // Indicate that saving is in progress
 
+    // Process the data through the client-side schema to ensure proper formatting
+    let taskData: Partial<TaskFormData>;
     try {
-      const response = await updateTask(id, data); // Call API to update the task
+      // Import the schema and process the data
+      taskData = taskSchema.parse(data);
+    } catch (validationError) {
+      console.error('Client-side validation failed:', validationError);
+      toast.error('Please check your form data and try again.');
+      setIsSaving(false);
+      return;
+    }
+
+    try {
+      const response = await updateTask(id, taskData); // Call API to update the task
       if (response.success) {
         toast.success('Task updated successfully!');
         navigate(`/tasks/${id}`); // Navigate to the task detail page after successful update

@@ -9,14 +9,10 @@ const validate = (schema) => {
     return (req, res, next) => {
         try {
             // Validate the request body against the schema
-            schema.parse(req.body);
-            next();
-        }
-        catch (error) {
-            // Handle Zod validation errors
-            if (error instanceof zod_1.ZodError) {
+            const result = schema.safeParse(req.body);
+            if (!result.success) {
                 // Format error messages
-                const formattedErrors = error.errors.map((err) => ({
+                const formattedErrors = result.error.errors.map((err) => ({
                     path: err.path.join('.'),
                     message: err.message,
                 }));
@@ -27,6 +23,11 @@ const validate = (schema) => {
                 });
                 return;
             }
+            req.body = result.data; // Use the parsed/transformed data
+            next();
+        }
+        catch (error) {
+            console.error('Validation middleware error:', error);
             next(error);
         }
     };

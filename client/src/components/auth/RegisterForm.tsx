@@ -39,8 +39,8 @@ const RegisterForm: React.FC = () => {
         // Update auth context with user data
         login(response.data.user);
 
-        // Redirect to dashboard on successful registration
-        navigate('/dashboard');
+        // Redirect to todo planner on successful registration
+        navigate('/todo-planner');
       } else {
         // Display error message
         setError(response.error?.toString() || 'Registration failed. Please try again.');

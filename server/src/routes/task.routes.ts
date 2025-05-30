@@ -1,11 +1,12 @@
 import { Router } from 'express'; // Express Router for defining API routes
 // Import controller functions that handle the business logic for task operations
 import {
-  createTask, // Controller to create a new task
   getTasks, // Controller to retrieve multiple tasks (with filtering/pagination)
   getTaskById, // Controller to retrieve a single task by its ID
   updateTask, // Controller to update an existing task
   deleteTask, // Controller to delete a task
+  getTasksByDate, // New controller for date-specific tasks
+  createTaskForDate, // New controller for date-specific task creation
 } from '../controllers/task.controller';
 // Import authentication and authorization middleware
 // `authenticate`: Verifies JWT to ensure user is logged in.
@@ -24,12 +25,18 @@ const router = Router(); // Initialize a new Express router for task-related rou
 // This means a user must be logged in to access any task endpoints.
 router.use(authenticate);
 
+// --- Date-Specific Routes (New Implementation) ---
+
+// GET /api/tasks/dashboard/:date - Get tasks for specific date (YYYYMMDD format)
+router.get('/dashboard/:date', getTasksByDate);
+
+// POST /api/tasks/create/:date - Create a task for specific date (YYYYMMDD format)
+router.post('/create/:date', validate(createTaskSchema), createTaskForDate);
+
 // --- Standard Task Routes (Authenticated Users) ---
 
-// POST /api/tasks - Create a new task.
-// - `validate(createTaskSchema)`: Validates the request body against `createTaskSchema`.
-// - `createTask`: Controller to handle task creation logic.
-router.post('/', validate(createTaskSchema), createTask);
+// Note: General task creation without a date is no longer supported
+// All tasks must be created for a specific date using /create/:date
 
 // GET /api/tasks - Retrieve a list of tasks.
 // - `validateQuery(taskFilterSchema)`: Validates query parameters (for filtering, sorting, pagination) against `taskFilterSchema`.

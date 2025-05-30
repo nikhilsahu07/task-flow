@@ -47,6 +47,7 @@ export interface Task {
   status: TaskStatus; // Current status of the task
   priority: TaskPriority; // Priority level of the task
   dueDate?: string; // Optional due date for the task (ISO string format)
+  createdFor?: string; // Optional date for which the task was created (ISO string format)
   createdBy: User; // User who created the task
   assignedTo?: User; // Optional user to whom the task is assigned
   createdAt: string; // Timestamp of when the task was created (ISO string format)

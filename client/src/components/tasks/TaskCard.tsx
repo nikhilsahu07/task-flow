@@ -94,78 +94,94 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
     <div className="relative group">
       {/* Tooltip */}
       <div
-        className={`absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-3 py-1 rounded shadow-md text-sm z-10 whitespace-nowrap pointer-events-none transition-opacity duration-200 ${
-          showTooltip && !isDragging ? 'opacity-100' : 'opacity-0'
+        className={`absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-3 py-2 rounded-lg shadow-lg text-sm z-10 whitespace-nowrap pointer-events-none transition-all duration-200 ${
+          showTooltip && !isDragging ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
         }`}
       >
         {task.title}
         {/* Small triangle pointer for the tooltip */}
-        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
       </div>
 
       {/* Task Card */}
       <div
         ref={cardRef} // Assign the ref for react-dnd to make this div draggable
-        // Apply a subtle opacity change when the card is being dragged.
-        className={`bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow ${
-          isDragging ? 'opacity-50' : 'opacity-100'
-        } cursor-move`}
+        className={`bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:scale-105 transition-all duration-200 ${
+          isDragging ? 'opacity-50 scale-105 shadow-2xl rotate-3' : 'opacity-100'
+        } cursor-grab active:cursor-grabbing group-hover:shadow-xl`}
         // Show tooltip only if not dragging.
         onMouseEnter={() => !isDragging && setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
       >
-        <div className="p-5">
-          <div className="flex justify-between items-start mb-3">
-            <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">{task.title}</h3>
-            <div className="flex space-x-2">
-              <span
-                className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getPriorityColor(
-                  task.priority,
-                )}`}
-              >
-                {task.priority}
-              </span>
-              <span
-                className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
-                  task.status,
-                )}`}
-              >
-                {formatStatus(task.status)}
-              </span>
-            </div>
+        {/* Drag Indicator */}
+        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="flex flex-col space-y-1">
+            <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+            <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+            <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+            <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+            <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+            <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+          </div>
+        </div>
+
+        <div className="p-6">
+          <div className="flex justify-between items-start mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 line-clamp-2 pr-8">{task.title}</h3>
           </div>
 
-          <p className="text-gray-600 mb-4 text-sm line-clamp-2">{task.description}</p>
+          <p className="text-gray-600 mb-6 text-sm line-clamp-3 leading-relaxed">
+            {task.description}
+          </p>
 
-          <div className="flex flex-col space-y-2">
+          {/* Badges */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            <span
+              className={`inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full ${getPriorityColor(
+                task.priority,
+              )}`}
+            >
+              {task.priority?.toUpperCase()}
+            </span>
+            <span
+              className={`inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full ${getStatusColor(
+                task.status,
+              )}`}
+            >
+              {formatStatus(task.status)}
+            </span>
+          </div>
+
+          {/* Task Info */}
+          <div className="space-y-2">
             <div className="flex items-center text-sm text-gray-500">
-              <Clock className="h-4 w-4 mr-1" />
+              <Clock className="h-4 w-4 mr-2 text-gray-400" />
               <span>Due: {formatDate(task.dueDate)}</span>
             </div>
 
             {task.assignedTo && (
               <div className="flex items-center text-sm text-gray-500">
-                <Tag className="h-4 w-4 mr-1" />
+                <Tag className="h-4 w-4 mr-2 text-gray-400" />
                 <span>Assigned to: {task.assignedTo.name}</span>
               </div>
             )}
           </div>
         </div>
 
-        <div className="border-t border-gray-200 p-4 bg-gray-50 rounded-b-lg flex justify-between">
+        <div className="border-t border-gray-100 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-xl flex justify-between items-center">
           <button
             onClick={() => onDelete(task._id)}
-            className="text-red-600 hover:text-red-800 text-sm font-medium transition-colors"
+            className="text-red-600 hover:text-red-700 text-sm font-semibold transition-colors duration-200 hover:bg-red-50 px-3 py-1 rounded-lg"
           >
             Delete
           </button>
 
           <Link
             to={`/tasks/${task._id}`}
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
+            className="inline-flex items-center text-blue-600 hover:text-blue-700 text-sm font-semibold transition-all duration-200 hover:bg-blue-50 px-3 py-1 rounded-lg"
           >
             View Details
-            <ArrowRight className="h-4 w-4 ml-1" />
+            <ArrowRight className="h-4 w-4 ml-2" />
           </Link>
         </div>
       </div>

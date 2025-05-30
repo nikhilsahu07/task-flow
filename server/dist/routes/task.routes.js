@@ -17,11 +17,14 @@ const router = (0, express_1.Router)(); // Initialize a new Express router for t
 // Apply JWT authentication to all routes defined in this file.
 // This means a user must be logged in to access any task endpoints.
 router.use(auth_middleware_1.authenticate);
+// --- Date-Specific Routes (New Implementation) ---
+// GET /api/tasks/dashboard/:date - Get tasks for specific date (YYYYMMDD format)
+router.get('/dashboard/:date', task_controller_1.getTasksByDate);
+// POST /api/tasks/create/:date - Create a task for specific date (YYYYMMDD format)
+router.post('/create/:date', (0, validation_middleware_1.validate)(task_validator_1.createTaskSchema), task_controller_1.createTaskForDate);
 // --- Standard Task Routes (Authenticated Users) ---
-// POST /api/tasks - Create a new task.
-// - `validate(createTaskSchema)`: Validates the request body against `createTaskSchema`.
-// - `createTask`: Controller to handle task creation logic.
-router.post('/', (0, validation_middleware_1.validate)(task_validator_1.createTaskSchema), task_controller_1.createTask);
+// Note: General task creation without a date is no longer supported
+// All tasks must be created for a specific date using /create/:date
 // GET /api/tasks - Retrieve a list of tasks.
 // - `validateQuery(taskFilterSchema)`: Validates query parameters (for filtering, sorting, pagination) against `taskFilterSchema`.
 // - `getTasks`: Controller to fetch and return tasks based on validated query params.

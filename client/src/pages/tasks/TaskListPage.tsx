@@ -125,7 +125,7 @@ const TaskListPage: React.FC = () => {
       <div className="mb-8 flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-900">All Tasks</h1>
         <Link
-          to="/tasks/create" // Link to the page for creating new tasks
+          to="/tasks/create-future" // Link to the page for creating future tasks with date selection
           className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
         >
           <PlusCircle className="h-5 w-5 mr-2" />
@@ -232,7 +232,7 @@ const TaskListPage: React.FC = () => {
         <div className="text-center py-12 bg-white rounded-lg shadow-sm">
           <p className="text-gray-500 mb-4">No tasks found matching your criteria.</p>
           <Link
-            to="/tasks/create"
+            to="/tasks/create-future"
             className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
           >
             <PlusCircle className="h-5 w-5 mr-2" />

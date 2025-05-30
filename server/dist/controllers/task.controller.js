@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTask = exports.updateTask = exports.getTaskById = exports.getTasks = exports.createTask = void 0;
+exports.createTaskForDate = exports.getTasksByDate = exports.deleteTask = exports.updateTask = exports.getTaskById = exports.getTasks = exports.createTask = void 0;
 const Task_1 = require("../models/Task");
 const mongoose_1 = __importDefault(require("mongoose"));
 /**
@@ -13,12 +13,23 @@ const createTask = async (req, res) => {
     try {
         const { id: userId } = req.user;
         const taskData = req.body;
+        // Ensure that createdFor is provided since all tasks must be associated with a date
+        if (!taskData.createdFor) {
+            res.status(400).json({
+                success: false,
+                message: 'Task creation failed',
+                error: 'createdFor date is required. All tasks must be associated with a specific date.',
+            });
+            return;
+        }
         // Create the task with the current user as creator
         const task = await Task_1.Task.create({
             ...taskData,
             createdBy: userId,
             // Convert string date to Date object if it exists
             dueDate: taskData.dueDate ? new Date(taskData.dueDate) : undefined,
+            // Convert createdFor string date to Date object
+            createdFor: new Date(taskData.createdFor),
             // Handle empty assignedTo strings to avoid ObjectId casting errors
             assignedTo: taskData.assignedTo ? taskData.assignedTo : undefined,
         });
@@ -238,6 +249,15 @@ const updateTask = async (req, res) => {
         if (updateData.dueDate) {
             taskUpdate.dueDate = new Date(updateData.dueDate);
         }
+        // Convert createdFor string date to Date object if it exists
+        // But don't update createdFor if it's null/undefined (preserve existing value)
+        if (updateData.createdFor) {
+            taskUpdate.createdFor = new Date(updateData.createdFor);
+        }
+        else {
+            // Remove createdFor from update data to preserve existing value
+            delete taskUpdate.createdFor;
+        }
         // Handle empty assignedTo strings to avoid ObjectId casting errors
         if (updateData.assignedTo === '') {
             taskUpdate.assignedTo = undefined;
@@ -327,4 +347,131 @@ const deleteTask = async (req, res) => {
     }
 };
 exports.deleteTask = deleteTask;
+/**
+ * Get tasks for a specific date (YYYYMMDD format)
+ */
+const getTasksByDate = async (req, res) => {
+    try {
+        const { id: userId, role } = req.user;
+        const { date } = req.params;
+        // Validate date format (YYYYMMDD)
+        if (!/^\d{8}$/.test(date)) {
+            res.status(400).json({
+                success: false,
+                message: 'Invalid date format',
+                error: 'Date must be in YYYYMMDD format',
+            });
+            return;
+        }
+        // Convert YYYYMMDD to ISO date
+        const year = date.substring(0, 4);
+        const month = date.substring(4, 6);
+        const day = date.substring(6, 8);
+        const targetDate = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
+        // Validate if the date is valid
+        if (isNaN(targetDate.getTime())) {
+            res.status(400).json({
+                success: false,
+                message: 'Invalid date',
+                error: 'The provided date is not valid',
+            });
+            return;
+        }
+        // Build the filter query
+        const filter = {
+            createdFor: {
+                $gte: targetDate,
+                $lt: new Date(targetDate.getTime() + 24 * 60 * 60 * 1000), // Next day
+            },
+        };
+        // Regular users can only see tasks they created or are assigned to
+        if (role !== 'admin') {
+            filter.$or = [{ createdBy: userId }, { assignedTo: userId }];
+        }
+        // Query tasks for the specific date
+        const tasks = await Task_1.Task.find(filter)
+            .sort({ createdAt: -1 })
+            .populate('createdBy', 'name email')
+            .populate('assignedTo', 'name email');
+        // Return tasks
+        res.status(200).json({
+            success: true,
+            message: `Tasks for ${date} retrieved successfully`,
+            data: {
+                tasks,
+                date: targetDate.toISOString(),
+                formattedDate: date,
+            },
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Failed to retrieve tasks for date',
+            error: error.message,
+        });
+    }
+};
+exports.getTasksByDate = getTasksByDate;
+/**
+ * Create a task for a specific date (YYYYMMDD format)
+ */
+const createTaskForDate = async (req, res) => {
+    try {
+        const { id: userId } = req.user;
+        const { date } = req.params;
+        const taskData = req.body;
+        // Validate date format (YYYYMMDD)
+        if (!/^\d{8}$/.test(date)) {
+            res.status(400).json({
+                success: false,
+                message: 'Invalid date format',
+                error: 'Date must be in YYYYMMDD format',
+            });
+            return;
+        }
+        // Convert YYYYMMDD to ISO date
+        const year = date.substring(0, 4);
+        const month = date.substring(4, 6);
+        const day = date.substring(6, 8);
+        const targetDate = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
+        // Validate if the date is valid
+        if (isNaN(targetDate.getTime())) {
+            res.status(400).json({
+                success: false,
+                message: 'Invalid date',
+                error: 'The provided date is not valid',
+            });
+            return;
+        }
+        // Create the task with the specified date and current user as creator
+        const task = await Task_1.Task.create({
+            ...taskData,
+            createdBy: userId,
+            createdFor: targetDate, // Always set to the specified date
+            // Convert string date to Date object if it exists
+            dueDate: taskData.dueDate ? new Date(taskData.dueDate) : undefined,
+            // Handle empty assignedTo strings to avoid ObjectId casting errors
+            assignedTo: taskData.assignedTo ? taskData.assignedTo : undefined,
+        });
+        // Return the created task
+        res.status(201).json({
+            success: true,
+            message: `Task created successfully for ${date}`,
+            data: {
+                task,
+                date: targetDate.toISOString(),
+                formattedDate: date,
+            },
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Failed to create task for date',
+            error: error.message,
+        });
+    }
+};
+exports.createTaskForDate = createTaskForDate;
 //# sourceMappingURL=task.controller.js.map

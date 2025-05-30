@@ -9,7 +9,7 @@ const RegisterPage: React.FC = () => {
   // Check if user is already logged in
   useEffect(() => {
     if (isAuthenticated()) {
-      navigate('/dashboard');
+      navigate('/todo-planner');
     }
   }, [navigate]);
 

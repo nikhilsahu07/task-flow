@@ -9,10 +9,10 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate(); // Used to redirect the user after login or if already logged in
 
   // useEffect hook to check authentication status when the component mounts.
-  // If the user is already authenticated, they are redirected to the dashboard.
+  // If the user is already authenticated, they are redirected to the todo planner.
   useEffect(() => {
     if (isAuthenticated()) {
-      navigate('/dashboard'); // Redirect to dashboard if already logged in
+      navigate('/todo-planner'); // Redirect to todo planner if already logged in
     }
   }, [navigate]); // Dependency array includes navigate to ensure it\'s stable
 

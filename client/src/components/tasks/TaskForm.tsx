@@ -14,13 +14,23 @@ interface TaskFormProps {
   initialData?: Task;
   /** Boolean indicating if the form is currently submitting (loading state). */
   isLoading: boolean;
+  /** Optional default date for which the task is being created (createdFor) */
+  defaultCreatedFor?: string;
+  /** Whether to hide the createdFor field (when date is specified in URL) */
+  hideCreatedFor?: boolean;
 }
 
 /**
  * TaskForm component provides a form for creating or editing tasks.
  * It uses React Hook Form for form handling and Zod for validation.
  */
-const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, initialData, isLoading }) => {
+const TaskForm: React.FC<TaskFormProps> = ({
+  onSubmit,
+  initialData,
+  isLoading,
+  defaultCreatedFor,
+  hideCreatedFor = false,
+}) => {
   // Initialize react-hook-form.
   // `zodResolver` integrates Zod for schema-based validation.
   // `defaultValues` are populated from `initialData` if provided (for editing),
@@ -39,6 +49,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, initialData, isLoading })
           priority: initialData.priority,
           // Ensure dueDate is in YYYY-MM-DD format for the date input
           dueDate: initialData.dueDate ? initialData.dueDate.split('T')[0] : '',
+          // Ensure createdFor is in YYYY-MM-DD format for the date input
+          createdFor: initialData.createdFor ? initialData.createdFor.split('T')[0] : '',
           assignedTo: initialData.assignedTo?._id, // Store only the ID of the assigned user
         }
       : {
@@ -47,6 +59,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, initialData, isLoading })
           status: TaskStatus.TODO,
           priority: TaskPriority.MEDIUM,
           dueDate: '',
+          createdFor: defaultCreatedFor || '',
           assignedTo: '',
         },
   });
@@ -132,6 +145,24 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, initialData, isLoading })
         />
         {errors.dueDate && <p className="mt-1 text-sm text-red-600">{errors.dueDate.message}</p>}
       </div>
+
+      {!hideCreatedFor && (
+        <div>
+          <label htmlFor="createdFor" className="block text-sm font-medium text-gray-700 mb-1">
+            Created For Date{' '}
+            <span className="text-sm text-gray-500">(Which day is this task planned for?)</span>
+          </label>
+          <input
+            id="createdFor"
+            type="date"
+            {...register('createdFor')}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.createdFor && (
+            <p className="mt-1 text-sm text-red-600">{errors.createdFor.message}</p>
+          )}
+        </div>
+      )}
 
       <div className="flex justify-end space-x-3">
         <button

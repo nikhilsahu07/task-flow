@@ -20,9 +20,12 @@ import { AuthProvider } from './contexts/AuthContext'; // Provides authenticatio
 // Application pages.
 import HomePage from './pages/HomePage';
 import DashboardPage from './pages/DashboardPage';
+import DashboardDatePage from './pages/DashboardDatePage';
+import TodoPlannerPage from './pages/TodoPlannerPage';
 import TaskListPage from './pages/tasks/TaskListPage';
 import TaskDetailPage from './pages/tasks/TaskDetailPage';
 import CreateTaskPage from './pages/tasks/CreateTaskPage';
+import CreateFutureTaskPage from './pages/tasks/CreateFutureTaskPage';
 import EditTaskPage from './pages/tasks/EditTaskPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage'; // Fallback page for unmatched routes.
@@ -47,10 +50,28 @@ const App: React.FC = () => {
               {/* Protected routes - require user to be logged in. */}
               {/* PrivateRoute handles the authentication check. */}
               <Route
+                path="/todo-planner"
+                element={
+                  <PrivateRoute>
+                    <TodoPlannerPage />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
                 path="/dashboard"
                 element={
                   <PrivateRoute>
                     <DashboardPage />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/dashboard/:date"
+                element={
+                  <PrivateRoute>
+                    <DashboardDatePage />
                   </PrivateRoute>
                 }
               />
@@ -64,8 +85,20 @@ const App: React.FC = () => {
                 }
               />
 
+              {/* Note: General task creation without a date is no longer supported */}
+              {/* All tasks must be created for a specific date using /tasks/create/:date */}
+
               <Route
-                path="/tasks/create"
+                path="/tasks/create-future"
+                element={
+                  <PrivateRoute>
+                    <CreateFutureTaskPage />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/tasks/create/:date"
                 element={
                   <PrivateRoute>
                     <CreateTaskPage />

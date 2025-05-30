@@ -56,6 +56,7 @@ export interface ITask {
   status: TaskStatus;
   priority: TaskPriority;
   dueDate?: string | Date; // Optional: Due date, can be a string (e.g., ISO) or Date object
+  createdFor?: string | Date; // Optional: Date for which the task was created (chosen by user)
   // createdBy and assignedTo can be ObjectIds or populated user objects (Record<string, any>).
   createdBy: string | mongoose.Types.ObjectId | Record<string, any>;
   assignedTo?: string | mongoose.Types.ObjectId | Record<string, any>;
