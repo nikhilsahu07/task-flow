@@ -16,7 +16,7 @@ const NotFoundPage: React.FC = () => {
       {/* Link component to navigate the user back to the homepage. */}
       <Link
         to="/" // Target route for the link
-        className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+        className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition-colors"
       >
         <ArrowLeft className="h-5 w-5 mr-2" />
         Go Back to Homepage

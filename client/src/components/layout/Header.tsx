@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, LogOut, User, CheckSquare } from 'lucide-react';
+import { Menu, X, LogOut, User, Layout } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import ConfirmDialog from '../common/ConfirmDialog';
 
@@ -69,13 +69,13 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className="bg-white border-b border-gray-200">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Link to="/" className="flex items-center">
-                <CheckSquare className="h-8 w-8 text-blue-600" />
-                <span className="ml-2 text-xl font-semibold text-gray-900">TaskFlow</span>
+              <Link to="/" className="flex items-center space-x-2">
+                <Layout className="h-8 w-8 text-indigo-600" />
+                <span className="text-xl font-bold text-gray-900">TaskFlow</span>
               </Link>
             </div>
 
@@ -85,29 +85,29 @@ const Header: React.FC = () => {
                 <>
                   <Link
                     to="/todo-planner"
-                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
                   >
                     Todo-Planner
                   </Link>
                   <Link
                     to={getTodayDashboardPath()}
-                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
                   >
                     Today&apos;s Dashboard
                   </Link>
                   <Link
                     to="/tasks"
-                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
                   >
                     All Tasks
                   </Link>
                   <div className="relative ml-4" ref={profileDropdownRef}>
                     <button
                       onClick={toggleProfileDropdown}
-                      className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors focus:outline-none"
+                      className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors focus:outline-none"
                     >
-                      <span className="mr-1">{user.name}</span>
-                      <User className="h-4 w-4" />
+                      <User className="h-4 w-4 mr-1" />
+                      <span>{user.name}</span>
                     </button>
                     {isProfileOpen && (
                       <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-10">
@@ -122,6 +122,7 @@ const Header: React.FC = () => {
                           onClick={handleLogoutClick}
                           className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                         >
+                          <LogOut className="h-4 w-4 mr-1 inline" />
                           Sign out
                         </button>
                       </div>
@@ -132,15 +133,15 @@ const Header: React.FC = () => {
                 <>
                   <Link
                     to="/login"
-                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
                   >
                     Log in
                   </Link>
                   <Link
                     to="/register"
-                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors"
                   >
-                    Sign up
+                    Get Started
                   </Link>
                 </>
               )}
@@ -150,7 +151,7 @@ const Header: React.FC = () => {
             <div className="flex items-center md:hidden">
               <button
                 onClick={toggleMenu}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-gray-100 transition-colors"
               >
                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
@@ -161,40 +162,40 @@ const Header: React.FC = () => {
         {/* Mobile menu */}
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="pt-2 pb-3 space-y-1">
+            <div className="pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-md border-t border-gray-100">
               {user ? (
                 <>
                   <Link
                     to="/todo-planner"
-                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Todo-Planner
                   </Link>
                   <Link
                     to={getTodayDashboardPath()}
-                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Today&apos;s Dashboard
                   </Link>
                   <Link
                     to="/tasks"
-                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     All Tasks
                   </Link>
                   <Link
                     to="/profile"
-                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Profile
                   </Link>
                   <button
                     onClick={handleLogoutClick}
-                    className="flex w-full px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                    className="flex w-full px-4 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100 transition-colors"
                   >
                     <LogOut className="h-5 w-5 mr-2" />
                     Sign out
@@ -204,17 +205,17 @@ const Header: React.FC = () => {
                 <>
                   <Link
                     to="/login"
-                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Log in
                   </Link>
                   <Link
                     to="/register"
-                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                    className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Sign up
+                    Get Started
                   </Link>
                 </>
               )}

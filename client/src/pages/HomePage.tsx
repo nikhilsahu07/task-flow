@@ -1,147 +1,213 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CheckSquare, ArrowRight, Check } from 'lucide-react';
-import { isAuthenticated } from '../api/authApi';
+import {
+  CheckCircle2,
+  ArrowRight,
+  Sparkles,
+  Clock,
+  Users2,
+  Zap,
+  Calendar,
+  Bell,
+  Shield,
+  Target,
+  Kanban,
+  LineChart as ChartLine,
+} from 'lucide-react';
 
-// HomePage serves as the landing page for the application.
-// It provides an overview of the application and calls to action (CTA) for users.
 const HomePage: React.FC = () => {
-  // Check if a user is currently authenticated to tailor CTAs.
-  const isLoggedIn = isAuthenticated();
-
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Hero section: Main welcome message and primary CTA. */}
-      <section className="py-12 md:py-20">
-        <div className="text-center">
-          <div className="flex justify-center">
-            <CheckSquare className="h-16 w-16 text-blue-600" />
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      {/* Hero Section */}
+      <section className="pt-16 pb-20 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="inline-flex items-center px-4 py-2 bg-indigo-50 rounded-full mb-8">
+            <Sparkles className="h-4 w-4 text-indigo-600 mr-2" />
+            <span className="text-sm font-medium text-indigo-600">Boost your productivity</span>
           </div>
-          <h1 className="mt-6 text-4xl md:text-5xl font-bold text-gray-900">
-            Manage your tasks with ease
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            Transform your workflow with{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+              TaskFlow
+            </span>
           </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-600">
-            A simple, yet powerful task management application built with modern web technologies.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-10">
+            The intelligent task management platform that helps teams collaborate, organize, and
+            achieve more together.
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-            {/* Display different CTAs based on authentication state. */}
-            {isLoggedIn ? (
-              // If logged in, direct user to their dashboard.
-              <Link
-                to="/dashboard"
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors"
-              >
-                Go to Dashboard
-                <ArrowRight className="h-5 w-5 ml-2 inline-block" />
-              </Link>
-            ) : (
-              // If not logged in, provide options to register or log in.
-              <>
-                <Link
-                  to="/register"
-                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors"
-                >
-                  Get Started Free
-                </Link>
-                <Link
-                  to="/login"
-                  className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium rounded-md shadow-sm transition-colors"
-                >
-                  Log In
-                </Link>
-              </>
-            )}
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Link
+              to="/register"
+              className="px-8 py-4 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center"
+            >
+              Start for free
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+            <Link
+              to="/demo"
+              className="px-8 py-4 bg-white text-gray-700 rounded-xl border border-gray-200 hover:border-gray-300 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              Watch demo
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Features section: Highlights key functionalities of the application. */}
-      <section className="py-12 bg-white rounded-lg shadow-md">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Key Features</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="flex flex-col items-center text-center">
-              <div className="bg-blue-100 text-blue-600 p-3 rounded-full mb-4">
-                <Check className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Intuitive Task Organization
-              </h3>
-              <p className="text-gray-600">
-                Easily create, update, and manage your tasks with a clean and user-friendly
-                interface.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="flex flex-col items-center text-center">
-              <div className="bg-blue-100 text-blue-600 p-3 rounded-full mb-4">
-                <Check className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Priority & Deadline Tracking
-              </h3>
-              <p className="text-gray-600">
-                Set priorities and due dates to stay organized and focused on what matters most.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="flex flex-col items-center text-center">
-              <div className="bg-blue-100 text-blue-600 p-3 rounded-full mb-4">
-                <Check className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Seamless Collaboration</h3>
-              <p className="text-gray-600">
-                Assign tasks, share progress, and work together efficiently with your team.
-              </p>
-            </div>
+      {/* Core Features Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Everything you need to stay organized
+            </h2>
+            <p className="text-xl text-gray-600">
+              Powerful features to help you manage tasks efficiently
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-12">
+            <FeatureCard
+              icon={<CheckCircle2 className="h-6 w-6" />}
+              title="Smart Task Management"
+              description="Organize tasks with intelligent categorization and priority management"
+            />
+            <FeatureCard
+              icon={<Clock className="h-6 w-6" />}
+              title="Time Tracking"
+              description="Monitor project progress and team productivity with built-in time tracking"
+            />
+            <FeatureCard
+              icon={<Users2 className="h-6 w-6" />}
+              title="Team Collaboration"
+              description="Work together seamlessly with real-time updates and shared workspaces"
+            />
           </div>
         </div>
       </section>
 
-      {/* Technology stack section: Lists the main technologies used in the project. */}
-      <section className="py-12 mt-8">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">
-            Built with Modern Technologies
+      {/* Advanced Features Grid */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Advanced Features for Modern Teams
+            </h2>
+            <p className="text-xl text-gray-600">
+              Discover powerful tools designed to enhance your workflow
+            </p>
+          </div>
+          <div className="grid md:grid-cols-4 gap-8">
+            <AdvancedFeatureCard
+              icon={<Calendar className="h-5 w-5" />}
+              title="Calendar Integration"
+              description="Sync with your favorite calendar apps"
+            />
+            <AdvancedFeatureCard
+              icon={<Bell className="h-5 w-5" />}
+              title="Smart Notifications"
+              description="Stay updated with customizable alerts"
+            />
+            <AdvancedFeatureCard
+              icon={<Shield className="h-5 w-5" />}
+              title="Advanced Security"
+              description="Enterprise-grade security features"
+            />
+            <AdvancedFeatureCard
+              icon={<Target className="h-5 w-5" />}
+              title="Goal Tracking"
+              description="Set and monitor team objectives"
+            />
+            <AdvancedFeatureCard
+              icon={<Kanban className="h-5 w-5" />}
+              title="Kanban Boards"
+              description="Visual task management tools"
+            />
+            <AdvancedFeatureCard
+              icon={<ChartLine className="h-5 w-5" />}
+              title="Analytics Dashboard"
+              description="Detailed insights and reports"
+            />
+            <AdvancedFeatureCard
+              icon={<Zap className="h-5 w-5" />}
+              title="Automation"
+              description="Automate routine tasks and workflows"
+            />
+            <AdvancedFeatureCard
+              icon={<Users2 className="h-5 w-5" />}
+              title="Team Insights"
+              description="Track team performance metrics"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-20 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <StatCard number="10k+" label="Active Users" />
+            <StatCard number="1M+" label="Tasks Completed" />
+            <StatCard number="99.9%" label="Uptime" />
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto text-center px-4">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">
+            Ready to transform your workflow?
           </h2>
-          <p className="text-center text-gray-600 mb-8">
-            This project leverages a full stack of powerful and popular technologies for a robust
-            and scalable solution.
+          <p className="text-xl text-gray-600 mb-8">
+            Join thousands of teams already using TaskFlow to achieve their goals
           </p>
-          {/* Display logos or names of technologies. */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <h3 className="font-semibold text-gray-900">TypeScript</h3>
-            </div>
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <h3 className="font-semibold text-gray-900">React</h3>
-            </div>
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <h3 className="font-semibold text-gray-900">Node.js</h3>
-            </div>
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <h3 className="font-semibold text-gray-900">Express.js</h3>
-            </div>
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <h3 className="font-semibold text-gray-900">MongoDB</h3>
-            </div>
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <h3 className="font-semibold text-gray-900">Zod</h3>
-            </div>
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <h3 className="font-semibold text-gray-900">JWT</h3>
-            </div>
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <h3 className="font-semibold text-gray-900">Tailwind CSS</h3>
-            </div>
-          </div>
+          <Link
+            to="/register"
+            className="inline-flex items-center px-8 py-4 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+          >
+            Get started for free
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Link>
         </div>
       </section>
     </div>
   );
 };
+
+const FeatureCard: React.FC<{
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}> = ({ icon, title, description }) => (
+  <div className="p-8 bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+    <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+      {icon}
+    </div>
+    <h3 className="text-xl font-semibold text-gray-900 mb-3">{title}</h3>
+    <p className="text-gray-600">{description}</p>
+  </div>
+);
+
+const AdvancedFeatureCard: React.FC<{
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}> = ({ icon, title, description }) => (
+  <div className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all hover:scale-105 border border-gray-100">
+    <div className="flex items-center mb-4">
+      <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 mr-3">
+        {icon}
+      </div>
+      <h3 className="font-semibold text-gray-900">{title}</h3>
+    </div>
+    <p className="text-sm text-gray-600">{description}</p>
+  </div>
+);
+
+const StatCard: React.FC<{ number: string; label: string }> = ({ number, label }) => (
+  <div className="p-8">
+    <div className="text-4xl font-bold text-indigo-600 mb-2">{number}</div>
+    <div className="text-gray-600">{label}</div>
+  </div>
+);
 
 export default HomePage;

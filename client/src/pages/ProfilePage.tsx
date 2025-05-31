@@ -43,7 +43,7 @@ const ProfilePage: React.FC = () => {
     return (
       <div className="text-center py-12">
         {/* Simple loading spinner */}
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
         <p className="text-gray-600">Loading profile...</p>
       </div>
     );
@@ -67,15 +67,15 @@ const ProfilePage: React.FC = () => {
 
       <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex items-center mb-8">
-          <div className="bg-blue-100 p-4 rounded-full">
-            <User className="h-12 w-12 text-blue-600" />
+          <div className="bg-indigo-100 p-4 rounded-full">
+            <User className="h-12 w-12 text-indigo-600" />
           </div>
           <div className="ml-4">
             <h2 className="text-xl font-semibold text-gray-900">{user.name}</h2>
             <div className="flex items-center mt-1">
               <p className="text-gray-500">{user.email}</p>
               {/* Display user role with a small badge */}
-              <span className="inline-flex items-center ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              <span className="inline-flex items-center ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
                 <Shield className="h-3 w-3 mr-1" />
                 {user.role} {/* Assuming role is a string like 'admin' or 'user' */}
               </span>
@@ -114,7 +114,7 @@ const ProfilePage: React.FC = () => {
           {/* Placeholder for future profile update functionality */}
           <button
             onClick={() => toast.info('Editing your profile will be available soon!')}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition-colors"
           >
             Update Profile
           </button>
