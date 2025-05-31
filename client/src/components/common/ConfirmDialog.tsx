@@ -46,34 +46,34 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   };
 
   const buttonVariants = {
-    danger: 'bg-red-500 hover:bg-red-600 text-white',
-    primary: 'bg-blue-500 hover:bg-blue-600 text-white',
+    danger: 'bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white',
+    primary: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white',
   };
 
   return (
     <div
       className={`fixed ${positionClasses[position]} z-50 ${widthClasses[position]} animate-fadeIn`}
     >
-      <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-        <div className="flex justify-between items-center bg-gray-50 px-4 py-3 border-b border-gray-200">
-          <h3 className="font-semibold text-gray-800 text-base">{title}</h3>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 px-4 py-3 border-b border-gray-200 dark:border-gray-600">
+          <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-base">{title}</h3>
           <button
             onClick={onCancel}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             aria-label="Close"
           >
             <X size={16} />
           </button>
         </div>
 
-        <div className="p-4 text-gray-600 text-sm">
+        <div className="p-4 text-gray-600 dark:text-gray-300 text-sm">
           <p>{message}</p>
         </div>
 
-        <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 flex justify-end gap-3">
+        <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-600 flex justify-end gap-3">
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors"
+            className="px-4 py-2 text-sm bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded transition-colors border border-gray-300 dark:border-gray-500"
           >
             {cancelText}
           </button>

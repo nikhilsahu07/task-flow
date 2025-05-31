@@ -189,13 +189,13 @@ const DashboardDatePage: React.FC = () => {
         <div className="mb-8 flex items-center">
           <Link
             to="/todo-planner"
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 mr-4"
+            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mr-4"
           >
             <ArrowLeft className="h-5 w-5 mr-1" />
             Back to Planner
           </Link>
         </div>
-        <div className="bg-red-50 text-red-600 p-4 rounded-md">
+        <div className="bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-4 rounded-md border border-red-200 dark:border-red-700">
           <AlertTriangle className="h-5 w-5 mr-2 inline" />
           Invalid date format. Please use YYYYMMDD format.
         </div>
@@ -205,20 +205,22 @@ const DashboardDatePage: React.FC = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8 flex justify-between items-center">
             <div className="flex items-center">
               <Link
                 to="/todo-planner"
-                className="inline-flex items-center text-blue-600 hover:text-blue-800 mr-6 transition-colors duration-200"
+                className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mr-6 transition-colors duration-200"
               >
                 <ArrowLeft className="h-5 w-5 mr-1" />
                 Back to Planner
               </Link>
               <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">{formattedDate}</h1>
-                <div className="flex items-center text-gray-600">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                  {formattedDate}
+                </h1>
+                <div className="flex items-center text-gray-600 dark:text-gray-400">
                   <Calendar className="h-4 w-4 mr-1" />
                   <span className="text-sm">
                     {tasks.length} task{tasks.length !== 1 ? 's' : ''} scheduled
@@ -229,7 +231,7 @@ const DashboardDatePage: React.FC = () => {
             <div className="flex space-x-3">
               <Link
                 to={`/tasks/create/${date}`}
-                className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:scale-105"
+                className="inline-flex items-center px-6 py-3 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:scale-105"
               >
                 <PlusCircle className="h-5 w-5 mr-2" />
                 Plan Task for This Date
@@ -238,7 +240,7 @@ const DashboardDatePage: React.FC = () => {
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 flex items-center border border-red-200">
+            <div className="bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-4 rounded-lg mb-6 flex items-center border border-red-200 dark:border-red-700">
               <AlertTriangle className="h-5 w-5 mr-2" />
               {error}
             </div>
@@ -246,20 +248,24 @@ const DashboardDatePage: React.FC = () => {
 
           {isLoading ? (
             <div className="text-center py-16">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-6"></div>
-              <p className="text-gray-600 text-lg">Loading tasks for {formattedDate}...</p>
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 dark:border-blue-400 mx-auto mb-6"></div>
+              <p className="text-gray-600 dark:text-gray-300 text-lg">
+                Loading tasks for {formattedDate}...
+              </p>
             </div>
           ) : tasks.length === 0 ? (
             <div className="text-center py-16">
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-12 max-w-md mx-auto">
-                <Calendar className="h-20 w-20 text-gray-400 mx-auto mb-6" />
-                <h3 className="text-2xl font-semibold text-gray-900 mb-3">No tasks scheduled</h3>
-                <p className="text-gray-600 mb-8 text-lg">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-12 max-w-md mx-auto">
+                <Calendar className="h-20 w-20 text-gray-400 dark:text-gray-600 mx-auto mb-6" />
+                <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
+                  No tasks scheduled
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg">
                   You don&apos;t have any tasks scheduled for this date.
                 </p>
                 <Link
                   to={`/tasks/create/${date}`}
-                  className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:scale-105"
+                  className="inline-flex items-center px-6 py-3 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:scale-105"
                 >
                   <PlusCircle className="h-5 w-5 mr-2" />
                   Plan Your First Task

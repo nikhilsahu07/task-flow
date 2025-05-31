@@ -123,10 +123,10 @@ const TaskListPage: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <div className="mb-8 flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">All Tasks</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">All Tasks</h1>
         <Link
           to="/tasks/create-future" // Link to the page for creating future tasks with date selection
-          className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+          className="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium rounded-md transition-colors"
         >
           <PlusCircle className="h-5 w-5 mr-2" />
           Create New Task
@@ -134,7 +134,7 @@ const TaskListPage: React.FC = () => {
       </div>
 
       {/* Search and filter controls section */}
-      <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
+      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mb-6">
         <div className="flex flex-col md:flex-row md:items-end gap-4">
           {/* Search input form */}
           <div className="flex-1">
@@ -144,11 +144,11 @@ const TaskListPage: React.FC = () => {
                 placeholder="Search tasks by title or description..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
               <button
                 type="submit"
-                className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 border border-l-0 border-gray-300 rounded-r-md transition-colors"
+                className="px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-md transition-colors"
               >
                 <Search className="h-5 w-5" />
               </button>
@@ -164,7 +164,7 @@ const TaskListPage: React.FC = () => {
                 setStatusFilter(e.target.value as TaskStatus | '');
                 setPage(1); // Reset to first page on filter change
               }}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-sm md:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value="">All Statuses</option>
               <option value={TaskStatus.TODO}>To Do</option>
@@ -180,7 +180,7 @@ const TaskListPage: React.FC = () => {
                 setPriorityFilter(e.target.value as TaskPriority | '');
                 setPage(1); // Reset to first page on filter change
               }}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-sm md:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value="">All Priorities</option>
               <option value={TaskPriority.LOW}>Low</option>
@@ -191,7 +191,7 @@ const TaskListPage: React.FC = () => {
             {/* Sort by Due Date button */}
             <button
               onClick={() => toggleSort('dueDate')}
-              className="inline-flex items-center justify-center px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 rounded-md transition-colors text-sm md:text-base whitespace-nowrap"
+              className="inline-flex items-center justify-center px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md transition-colors text-sm md:text-base whitespace-nowrap"
             >
               Due Date
               {sortBy === 'dueDate' &&
@@ -205,7 +205,7 @@ const TaskListPage: React.FC = () => {
             {/* Reset filters button */}
             <button
               onClick={resetFilters}
-              className="px-3 py-2 text-blue-600 hover:bg-blue-50 border border-blue-200 rounded-md transition-colors text-sm md:text-base"
+              className="px-3 py-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-md transition-colors text-sm md:text-base"
             >
               Reset Filters
             </button>
@@ -215,7 +215,7 @@ const TaskListPage: React.FC = () => {
 
       {/* Display error message if an error occurred */}
       {error && (
-        <div className="bg-red-50 text-red-600 p-4 rounded-md mb-6 flex items-center">
+        <div className="bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-4 rounded-md mb-6 flex items-center border border-red-200 dark:border-red-700">
           <AlertTriangle className="h-5 w-5 mr-2" />
           {error}
         </div>
@@ -224,16 +224,18 @@ const TaskListPage: React.FC = () => {
       {/* Display loading spinner or no tasks message or task cards */}
       {isLoading ? (
         <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading tasks, please wait...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-300">Loading tasks, please wait...</p>
         </div>
       ) : tasks.length === 0 ? (
         // Message displayed when no tasks match the current filters or if there are no tasks at all.
-        <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-          <p className="text-gray-500 mb-4">No tasks found matching your criteria.</p>
+        <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <p className="text-gray-500 dark:text-gray-400 mb-4">
+            No tasks found matching your criteria.
+          </p>
           <Link
             to="/tasks/create-future"
-            className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium rounded-md transition-colors"
           >
             <PlusCircle className="h-5 w-5 mr-2" />
             Create a New Task
@@ -256,7 +258,7 @@ const TaskListPage: React.FC = () => {
                 <button
                   onClick={() => setPage(Math.max(1, page - 1))} // Ensure page doesn't go below 1
                   disabled={page === 1} // Disable if on the first page
-                  className="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-3 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Previous
                 </button>
@@ -265,10 +267,10 @@ const TaskListPage: React.FC = () => {
                   <button
                     key={i}
                     onClick={() => setPage(i + 1)}
-                    className={`px-3 py-2 border-t border-b border-gray-300 ${
+                    className={`px-3 py-2 border-t border-b border-gray-300 dark:border-gray-600 ${
                       page === i + 1
-                        ? 'bg-blue-50 text-blue-600 font-medium' // Highlight current page
-                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                        ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 font-medium' // Highlight current page
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     } transition-colors`}
                   >
                     {i + 1}
@@ -278,7 +280,7 @@ const TaskListPage: React.FC = () => {
                 <button
                   onClick={() => setPage(Math.min(totalPages, page + 1))} // Ensure page doesn't exceed totalPages
                   disabled={page === totalPages} // Disable if on the last page
-                  className="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-3 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Next
                 </button>

@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
   }, [navigate]);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center px-4 bg-gradient-to-br from-gray-50 to-indigo-50">
+    <div className="fixed inset-0 flex items-center justify-center px-4 bg-gradient-to-br from-gray-50 to-indigo-50 dark:from-gray-900 dark:to-indigo-900/50">
       <div className="w-full max-w-md">
         <LoginForm />
       </div>

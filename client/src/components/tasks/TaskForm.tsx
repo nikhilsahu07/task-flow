@@ -67,99 +67,129 @@ const TaskForm: React.FC<TaskFormProps> = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+        >
           Title
         </label>
         <input
           id="title"
           type="text"
           {...register('title')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
           placeholder="Task title"
         />
-        {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>}
+        {errors.title && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.title.message}</p>
+        )}
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+        >
           Description
         </label>
         <textarea
           id="description"
           rows={4}
           {...register('description')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
           placeholder="Task description"
         />
         {errors.description && (
-          <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+            {errors.description.message}
+          </p>
         )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="status"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             Status
           </label>
           <select
             id="status"
             {...register('status')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
             <option value={TaskStatus.TODO}>To Do</option>
             <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
             <option value={TaskStatus.REVIEW}>Review</option>
             <option value={TaskStatus.DONE}>Done</option>
           </select>
-          {errors.status && <p className="mt-1 text-sm text-red-600">{errors.status.message}</p>}
+          {errors.status && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.status.message}</p>
+          )}
         </div>
 
         <div>
-          <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="priority"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             Priority
           </label>
           <select
             id="priority"
             {...register('priority')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
             <option value={TaskPriority.LOW}>Low</option>
             <option value={TaskPriority.MEDIUM}>Medium</option>
             <option value={TaskPriority.HIGH}>High</option>
           </select>
           {errors.priority && (
-            <p className="mt-1 text-sm text-red-600">{errors.priority.message}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.priority.message}</p>
           )}
         </div>
       </div>
 
       <div>
-        <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="dueDate"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+        >
           Due Date
         </label>
         <input
           id="dueDate"
           type="date"
           {...register('dueDate')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
         />
-        {errors.dueDate && <p className="mt-1 text-sm text-red-600">{errors.dueDate.message}</p>}
+        {errors.dueDate && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.dueDate.message}</p>
+        )}
       </div>
 
       {!hideCreatedFor && (
         <div>
-          <label htmlFor="createdFor" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="createdFor"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             Created For Date{' '}
-            <span className="text-sm text-gray-500">(Which day is this task planned for?)</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              (Which day is this task planned for?)
+            </span>
           </label>
           <input
             id="createdFor"
             type="date"
             {...register('createdFor')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           />
           {errors.createdFor && (
-            <p className="mt-1 text-sm text-red-600">{errors.createdFor.message}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              {errors.createdFor.message}
+            </p>
           )}
         </div>
       )}
@@ -168,14 +198,14 @@ const TaskForm: React.FC<TaskFormProps> = ({
         <button
           type="button"
           onClick={() => window.history.back()}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+          className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors border border-gray-300 dark:border-gray-600"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? 'Saving...' : 'Save Task'}
         </button>

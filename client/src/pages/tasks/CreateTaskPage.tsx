@@ -95,15 +95,15 @@ const CreateTaskPage: React.FC = () => {
       <div className="mb-6">
         <Link
           to={isDateSpecific ? `/dashboard/${date}` : '/tasks'}
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+          className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 transition-colors"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
           {isDateSpecific ? 'Cancel & Back to Dashboard' : 'Cancel & Back to Task List'}
         </Link>
       </div>
 
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+      <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6">
           {isDateSpecific
             ? `Plan Task for ${(() => {
                 const date = new Date(parsedDate!);

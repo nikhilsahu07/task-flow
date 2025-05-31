@@ -1,50 +1,168 @@
 @import 'tailwindcss';
 
+/* Configure dark mode variant for Tailwind CSS 4.x */
+@variant dark (&:where(.dark, .dark *));
+
+/* Base styles with theme support */
+* {
+  transition:
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
+}
+
+body {
+  @apply transition-colors duration-200;
+}
+
+/* Dark mode body background */
+html.dark {
+  @apply bg-gray-900;
+}
+
+html.dark body {
+  @apply bg-gray-900 text-gray-100;
+}
+
 /* Custom toast styles */
 .Toastify__toast {
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  font-family: inherit;
+}
+
+/* Dark mode toast general styling */
+html.dark .Toastify__toast {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.3),
+    0 10px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark mode toast container */
+html.dark .Toastify__toast-container {
+  background: transparent;
 }
 
 .Toastify__toast-body {
   font-family: inherit;
   font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
 }
 
+.Toastify__close-button {
+  opacity: 0.6;
+}
+
+.Toastify__close-button:hover {
+  opacity: 1;
+}
+
+/* Success Toast */
 .Toastify__toast--success {
-  background-color: #d1fae5;
+  background-color: #ecfdf5;
   color: #065f46;
+  border-color: #a7f3d0;
 }
 
+html.dark .Toastify__toast--success {
+  background-color: #022c22;
+  color: #6ee7b7;
+  border-color: #065f46;
+}
+
+html.dark .Toastify__toast--success .Toastify__close-button {
+  color: #6ee7b7;
+}
+
+/* Error Toast */
 .Toastify__toast--error {
-  background-color: #fee2e2;
+  background-color: #fef2f2;
   color: #b91c1c;
+  border-color: #fca5a5;
 }
 
+html.dark .Toastify__toast--error {
+  background-color: #2d1b1b;
+  color: #f87171;
+  border-color: #b91c1c;
+}
+
+html.dark .Toastify__toast--error .Toastify__close-button {
+  color: #f87171;
+}
+
+/* Info Toast */
 .Toastify__toast--info {
-  background-color: #dbeafe;
+  background-color: #eff6ff;
   color: #1e40af;
+  border-color: #93c5fd;
 }
 
+html.dark .Toastify__toast--info {
+  background-color: #1e293b;
+  color: #60a5fa;
+  border-color: #1e40af;
+}
+
+html.dark .Toastify__toast--info .Toastify__close-button {
+  color: #60a5fa;
+}
+
+/* Warning Toast */
 .Toastify__toast--warning {
-  background-color: #fef3c7;
+  background-color: #fffbeb;
   color: #92400e;
+  border-color: #fde68a;
+}
+
+html.dark .Toastify__toast--warning {
+  background-color: #2d2111;
+  color: #fbbf24;
+  border-color: #92400e;
+}
+
+html.dark .Toastify__toast--warning .Toastify__close-button {
+  color: #fbbf24;
+}
+
+/* Progress bar styling */
+.Toastify__progress-bar {
+  height: 3px;
 }
 
 .Toastify__progress-bar--success {
   background-color: #10b981;
 }
 
+html.dark .Toastify__progress-bar--success {
+  background-color: #6ee7b7;
+}
+
 .Toastify__progress-bar--error {
   background-color: #ef4444;
+}
+
+html.dark .Toastify__progress-bar--error {
+  background-color: #f87171;
 }
 
 .Toastify__progress-bar--info {
   background-color: #3b82f6;
 }
 
+html.dark .Toastify__progress-bar--info {
+  background-color: #60a5fa;
+}
+
 .Toastify__progress-bar--warning {
   background-color: #f59e0b;
+}
+
+html.dark .Toastify__progress-bar--warning {
+  background-color: #fbbf24;
 }

@@ -168,37 +168,37 @@ const TodoPlannerPage: React.FC = () => {
   const getStatusColor = (status: TaskStatus) => {
     switch (status) {
       case TaskStatus.TODO:
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-700';
       case TaskStatus.IN_PROGRESS:
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700';
       case TaskStatus.REVIEW:
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-700';
       case TaskStatus.DONE:
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-600';
     }
   };
 
   const getStatusBorder = (status: TaskStatus) => {
     switch (status) {
       case TaskStatus.TODO:
-        return 'border-l-blue-500';
+        return 'border-l-blue-500 dark:border-l-blue-400';
       case TaskStatus.IN_PROGRESS:
-        return 'border-l-yellow-500';
+        return 'border-l-yellow-500 dark:border-l-yellow-400';
       case TaskStatus.REVIEW:
-        return 'border-l-purple-500';
+        return 'border-l-purple-500 dark:border-l-purple-400';
       case TaskStatus.DONE:
-        return 'border-l-green-500';
+        return 'border-l-green-500 dark:border-l-green-400';
       default:
-        return 'border-l-gray-500';
+        return 'border-l-gray-500 dark:border-l-gray-400';
     }
   };
 
   const getStatusText = (status: TaskStatus) => {
     switch (status) {
       case TaskStatus.TODO:
-        return 'Todo';
+        return 'To Do';
       case TaskStatus.IN_PROGRESS:
         return 'In Progress';
       case TaskStatus.REVIEW:
@@ -206,11 +206,10 @@ const TodoPlannerPage: React.FC = () => {
       case TaskStatus.DONE:
         return 'Done';
       default:
-        return status;
+        return 'Unknown';
     }
   };
 
-  // Filter tasks based on status filter
   const getFilteredDayCards = () => {
     if (statusFilter === 'all') {
       return dayCards;
@@ -222,30 +221,20 @@ const TodoPlannerPage: React.FC = () => {
     }));
   };
 
-  // Get proper week statistics based on actual week boundaries (smallest to largest date)
   const getWeekStatistics = () => {
-    const cards = getFilteredDayCards();
-
-    // Get the actual date range for statistics (always use proper week boundaries)
-    const dates = cards.map((card) => card.date).sort();
-    const minDate = dates[0];
-    const maxDate = dates[dates.length - 1];
-
-    // Only count tasks within the proper week date range
-    const weekTasks = cards.reduce((allTasks: Task[], card) => {
-      if (card.date >= minDate && card.date <= maxDate) {
-        return [...allTasks, ...card.tasks];
-      }
-      return allTasks;
-    }, [] as Task[]);
+    const allTasks = dayCards.flatMap((card) => card.tasks);
+    const totalTasks = allTasks.length;
+    const doneTasks = allTasks.filter((task) => task.status === TaskStatus.DONE).length;
+    const inProgressTasks = allTasks.filter(
+      (task) => task.status === TaskStatus.IN_PROGRESS,
+    ).length;
+    const reviewTasks = allTasks.filter((task) => task.status === TaskStatus.REVIEW).length;
 
     return {
-      totalTasks: weekTasks.length,
-      doneTasks: weekTasks.filter((task: Task) => task.status === TaskStatus.DONE).length,
-      inProgressTasks: weekTasks.filter((task: Task) => task.status === TaskStatus.IN_PROGRESS)
-        .length,
-      reviewTasks: weekTasks.filter((task: Task) => task.status === TaskStatus.REVIEW).length,
-      todoTasks: weekTasks.filter((task: Task) => task.status === TaskStatus.TODO).length,
+      totalTasks,
+      doneTasks,
+      inProgressTasks,
+      reviewTasks,
     };
   };
 
@@ -254,11 +243,11 @@ const TodoPlannerPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 p-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center py-16">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-6"></div>
-            <p className="text-gray-600 text-lg">Loading your task planner...</p>
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 dark:border-blue-400 mx-auto mb-6"></div>
+            <p className="text-gray-600 dark:text-gray-300 text-lg">Loading your task planner...</p>
           </div>
         </div>
       </div>
@@ -266,14 +255,14 @@ const TodoPlannerPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-2">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 p-2">
       <div className="max-w-7xl mx-auto">
         {/* Weekly Task Statistics Bar - Made Compact */}
-        <div className="mb-1 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div className="mb-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
           {/* Always Visible Progress Bar - Compact */}
           <div className="px-3 py-1.5">
             <div className="flex items-center justify-between mb-1">
-              <h2 className="text-sm font-medium text-gray-800">
+              <h2 className="text-sm font-medium text-gray-800 dark:text-gray-200">
                 {weekOffset === 0
                   ? 'This Week'
                   : weekOffset > 0
@@ -282,7 +271,7 @@ const TodoPlannerPage: React.FC = () => {
               </h2>
               <button
                 onClick={() => setIsStatsExpanded(!isStatsExpanded)}
-                className="flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200"
+                className="flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
               >
                 <span className="text-xs">{isStatsExpanded ? '▲' : '▼'}</span>
                 <span className="hidden sm:inline">{isStatsExpanded ? 'Less' : 'More'}</span>
@@ -298,14 +287,16 @@ const TodoPlannerPage: React.FC = () => {
                 return (
                   <>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-gray-600">
+                      <span className="text-gray-600 dark:text-gray-400">
                         {weekStats.doneTasks} of {weekStats.totalTasks} completed
                       </span>
-                      <span className="text-gray-500">{Math.round(progressPercentage)}%</span>
+                      <span className="text-gray-500 dark:text-gray-400">
+                        {Math.round(progressPercentage)}%
+                      </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1">
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1">
                       <div
-                        className="bg-gradient-to-r from-green-400 to-green-600 h-1 rounded-full transition-all duration-500 ease-out"
+                        className="bg-gradient-to-r from-green-400 to-green-600 dark:from-green-500 dark:to-green-400 h-1 rounded-full transition-all duration-500 ease-out"
                         style={{ width: `${progressPercentage}%` }}
                       ></div>
                     </div>
@@ -316,7 +307,7 @@ const TodoPlannerPage: React.FC = () => {
 
             {/* Date Range (only when collapsed) - More Compact */}
             {!isStatsExpanded && (
-              <div className="mt-1 text-xs text-gray-400">
+              <div className="mt-1 text-xs text-gray-400 dark:text-gray-500">
                 {(() => {
                   // Get the actual week date range from filtered cards
                   const dates = filteredDayCards.map((card) => card.date).sort();
@@ -340,10 +331,10 @@ const TodoPlannerPage: React.FC = () => {
 
           {/* Expanded Statistics - More Compact */}
           {isStatsExpanded && (
-            <div className="border-t border-gray-200 px-3 py-2 bg-gray-50">
+            <div className="border-t border-gray-200 dark:border-gray-700 px-3 py-2 bg-gray-50 dark:bg-gray-700/50">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-700">Statistics</h3>
-                <div className="text-xs text-gray-500">
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Statistics</h3>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
                   {(() => {
                     // Get the actual week date range from filtered cards
                     const dates = filteredDayCards.map((card) => card.date).sort();
@@ -366,35 +357,39 @@ const TodoPlannerPage: React.FC = () => {
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {/* Total Tasks Scheduled */}
-                <div className="text-center p-2 bg-gradient-to-br from-gray-50 to-gray-100 rounded border border-gray-200 hover:shadow-sm transition-all duration-200">
-                  <div className="text-lg font-bold text-gray-700 mb-0.5">
+                <div className="text-center p-2 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-600 dark:to-gray-700 rounded border border-gray-200 dark:border-gray-600 hover:shadow-sm transition-all duration-200">
+                  <div className="text-lg font-bold text-gray-700 dark:text-gray-300 mb-0.5">
                     {weekStats.totalTasks}
                   </div>
-                  <div className="text-xs text-gray-600 font-medium">Total</div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400 font-medium">Total</div>
                 </div>
 
                 {/* In Progress */}
-                <div className="text-center p-2 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded border border-yellow-200 hover:shadow-sm transition-all duration-200">
-                  <div className="text-lg font-bold text-yellow-700 mb-0.5">
+                <div className="text-center p-2 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/30 dark:to-yellow-800/30 rounded border border-yellow-200 dark:border-yellow-700 hover:shadow-sm transition-all duration-200">
+                  <div className="text-lg font-bold text-yellow-700 dark:text-yellow-300 mb-0.5">
                     {weekStats.inProgressTasks}
                   </div>
-                  <div className="text-xs text-yellow-700 font-medium">In Progress</div>
+                  <div className="text-xs text-yellow-700 dark:text-yellow-400 font-medium">
+                    In Progress
+                  </div>
                 </div>
 
                 {/* Review */}
-                <div className="text-center p-2 bg-gradient-to-br from-purple-50 to-purple-100 rounded border border-purple-200 hover:shadow-sm transition-all duration-200">
-                  <div className="text-lg font-bold text-purple-700 mb-0.5">
+                <div className="text-center p-2 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 rounded border border-purple-200 dark:border-purple-700 hover:shadow-sm transition-all duration-200">
+                  <div className="text-lg font-bold text-purple-700 dark:text-purple-300 mb-0.5">
                     {weekStats.reviewTasks}
                   </div>
-                  <div className="text-xs text-purple-700 font-medium">Review</div>
+                  <div className="text-xs text-purple-700 dark:text-purple-400 font-medium">
+                    Review
+                  </div>
                 </div>
 
                 {/* Done */}
-                <div className="text-center p-2 bg-gradient-to-br from-green-50 to-green-100 rounded border border-green-200 hover:shadow-sm transition-all duration-200">
-                  <div className="text-lg font-bold text-green-700 mb-0.5">
+                <div className="text-center p-2 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 rounded border border-green-200 dark:border-green-700 hover:shadow-sm transition-all duration-200">
+                  <div className="text-lg font-bold text-green-700 dark:text-green-300 mb-0.5">
                     {weekStats.doneTasks}
                   </div>
-                  <div className="text-xs text-green-700 font-medium">Done</div>
+                  <div className="text-xs text-green-700 dark:text-green-400 font-medium">Done</div>
                 </div>
               </div>
             </div>
@@ -403,20 +398,24 @@ const TodoPlannerPage: React.FC = () => {
 
         {/* Header - More Compact */}
         <div className="mb-2">
-          <h1 className="text-2xl font-bold text-gray-900 mb-0.5">Task Planner</h1>
-          <p className="text-sm text-gray-600">Organize your tasks by day and status</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-0.5">Task Planner</h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Organize your tasks by day and status
+          </p>
         </div>
 
         {/* Status Filter - Much More Compact */}
-        <div className="mb-2 bg-white rounded-lg shadow-sm border border-gray-200 px-3 py-1.5">
+        <div className="mb-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 px-3 py-1.5">
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-xs font-medium text-gray-600 mr-1">Filter:</span>
+            <span className="text-xs font-medium text-gray-600 dark:text-gray-400 mr-1">
+              Filter:
+            </span>
             <button
               onClick={() => setStatusFilter('all')}
               className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-200 ${
                 statusFilter === 'all'
-                  ? 'bg-gray-900 text-white shadow-sm'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-gray-900 dark:bg-gray-600 text-white shadow-sm'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >
               All
@@ -425,8 +424,8 @@ const TodoPlannerPage: React.FC = () => {
               onClick={() => setStatusFilter(TaskStatus.TODO)}
               className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-200 ${
                 statusFilter === TaskStatus.TODO
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+                  ? 'bg-blue-600 dark:bg-blue-500 text-white shadow-sm'
+                  : 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50'
               }`}
             >
               Todo
@@ -435,8 +434,8 @@ const TodoPlannerPage: React.FC = () => {
               onClick={() => setStatusFilter(TaskStatus.IN_PROGRESS)}
               className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-200 ${
                 statusFilter === TaskStatus.IN_PROGRESS
-                  ? 'bg-yellow-500 text-white shadow-sm'
-                  : 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100'
+                  ? 'bg-yellow-500 dark:bg-yellow-600 text-white shadow-sm'
+                  : 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 hover:bg-yellow-100 dark:hover:bg-yellow-900/50'
               }`}
             >
               In Progress
@@ -445,8 +444,8 @@ const TodoPlannerPage: React.FC = () => {
               onClick={() => setStatusFilter(TaskStatus.REVIEW)}
               className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-200 ${
                 statusFilter === TaskStatus.REVIEW
-                  ? 'bg-purple-600 text-white shadow-sm'
-                  : 'bg-purple-50 text-purple-700 hover:bg-purple-100'
+                  ? 'bg-purple-600 dark:bg-purple-500 text-white shadow-sm'
+                  : 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/50'
               }`}
             >
               Review
@@ -455,8 +454,8 @@ const TodoPlannerPage: React.FC = () => {
               onClick={() => setStatusFilter(TaskStatus.DONE)}
               className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-200 ${
                 statusFilter === TaskStatus.DONE
-                  ? 'bg-green-600 text-white shadow-sm'
-                  : 'bg-green-50 text-green-700 hover:bg-green-100'
+                  ? 'bg-green-600 dark:bg-green-500 text-white shadow-sm'
+                  : 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/50'
               }`}
             >
               Done
@@ -468,14 +467,14 @@ const TodoPlannerPage: React.FC = () => {
         <div className="mb-4 flex items-center justify-between">
           <button
             onClick={() => navigateWeek('prev')}
-            className="flex items-center px-3 py-2 bg-white rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+            className="flex items-center px-3 py-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:shadow-md transition-all duration-200"
           >
             <ChevronLeft className="h-4 w-4 mr-1.5" />
             <span className="text-sm font-medium">Previous</span>
           </button>
 
           <div className="text-center">
-            <h2 className="text-lg font-semibold text-gray-800">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
               {(() => {
                 // Calculate the target date for the displayed week
                 const today = new Date();
@@ -488,17 +487,19 @@ const TodoPlannerPage: React.FC = () => {
                 });
               })()}
             </h2>
-            {weekOffset === 0 && <p className="text-xs text-gray-600">Current Week</p>}
+            {weekOffset === 0 && (
+              <p className="text-xs text-gray-600 dark:text-gray-400">Current Week</p>
+            )}
             {weekOffset !== 0 && (
               <div className="space-y-0.5">
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-gray-600 dark:text-gray-400">
                   {weekOffset > 0
                     ? `${weekOffset} week${weekOffset > 1 ? 's' : ''} ahead`
                     : `${Math.abs(weekOffset)} week${Math.abs(weekOffset) > 1 ? 's' : ''} ago`}
                 </p>
                 <button
                   onClick={() => setWeekOffset(0)}
-                  className="text-xs text-blue-600 hover:text-blue-800 underline"
+                  className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
                 >
                   Back to Current Week
                 </button>
@@ -508,7 +509,7 @@ const TodoPlannerPage: React.FC = () => {
 
           <button
             onClick={() => navigateWeek('next')}
-            className="flex items-center px-3 py-2 bg-white rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+            className="flex items-center px-3 py-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:shadow-md transition-all duration-200"
           >
             <span className="text-sm font-medium">Next</span>
             <ChevronRight className="h-4 w-4 ml-1.5" />
@@ -523,28 +524,32 @@ const TodoPlannerPage: React.FC = () => {
               <div
                 key={card.date}
                 onClick={() => handleDayClick(card.date)}
-                className={`bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer group overflow-hidden ${
-                  card.isToday ? 'ring-2 ring-blue-500 bg-gradient-to-br from-blue-50 to-white' : ''
+                className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer group overflow-hidden ${
+                  card.isToday
+                    ? 'ring-2 ring-blue-500 dark:ring-blue-400 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/20 dark:to-gray-800'
+                    : ''
                 }`}
               >
                 {/* Day Header */}
                 <div
-                  className={`p-3 border-b border-gray-100 ${
+                  className={`p-3 border-b border-gray-100 dark:border-gray-700 ${
                     card.isToday
-                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
-                      : 'bg-gray-50'
+                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 text-white'
+                      : 'bg-gray-50 dark:bg-gray-700/50'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <h3
                         className={`font-bold text-base ${
-                          card.isToday ? 'text-white' : 'text-gray-900'
+                          card.isToday ? 'text-white' : 'text-gray-900 dark:text-white'
                         }`}
                       >
                         @{card.displayDate}
                       </h3>
-                      <p className={`text-xs ${card.isToday ? 'text-blue-100' : 'text-gray-600'}`}>
+                      <p
+                        className={`text-xs ${card.isToday ? 'text-blue-100' : 'text-gray-600 dark:text-gray-400'}`}
+                      >
                         {card.fullDate}
                       </p>
                     </div>
@@ -553,7 +558,7 @@ const TodoPlannerPage: React.FC = () => {
                       className={`p-1.5 rounded-full transition-all duration-200 hover:scale-110 ${
                         card.isToday
                           ? 'bg-white/20 text-white hover:bg-white/30'
-                          : 'bg-blue-100 text-blue-600 hover:bg-blue-200'
+                          : 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/70'
                       }`}
                       title="Add task"
                     >
@@ -566,8 +571,10 @@ const TodoPlannerPage: React.FC = () => {
                 <div className="p-3 min-h-[180px]">
                   {card.tasks.length === 0 ? (
                     <div className="text-center py-6">
-                      <Calendar className="h-10 w-10 text-gray-300 mx-auto mb-2" />
-                      <p className="text-xs text-gray-500">No tasks for this day</p>
+                      <Calendar className="h-10 w-10 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        No tasks for this day
+                      </p>
                     </div>
                   ) : (
                     <div className="space-y-2">
@@ -576,10 +583,10 @@ const TodoPlannerPage: React.FC = () => {
                           key={task._id}
                           className={`border-l-4 ${getStatusBorder(
                             task.status,
-                          )} bg-gray-50 rounded-r-lg p-2.5 hover:bg-gray-100 transition-all duration-200 hover:shadow-sm group/task`}
+                          )} bg-gray-50 dark:bg-gray-700/50 rounded-r-lg p-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:shadow-sm group/task`}
                         >
                           <div className="flex items-start justify-between mb-1.5">
-                            <h4 className="text-xs font-semibold text-gray-900 line-clamp-2 group-hover/task:text-blue-700 transition-colors">
+                            <h4 className="text-xs font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover/task:text-blue-700 dark:group-hover/task:text-blue-400 transition-colors">
                               {task.title}
                             </h4>
                           </div>
@@ -597,10 +604,10 @@ const TodoPlannerPage: React.FC = () => {
                               <span
                                 className={`text-xs font-medium ${
                                   task.priority === 'high'
-                                    ? 'text-red-600'
+                                    ? 'text-red-600 dark:text-red-400'
                                     : task.priority === 'medium'
-                                      ? 'text-yellow-600'
-                                      : 'text-green-600'
+                                      ? 'text-yellow-600 dark:text-yellow-400'
+                                      : 'text-green-600 dark:text-green-400'
                                 }`}
                               >
                                 {task.priority?.toUpperCase()}
@@ -622,28 +629,32 @@ const TodoPlannerPage: React.FC = () => {
               <div
                 key={card.date}
                 onClick={() => handleDayClick(card.date)}
-                className={`bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer group overflow-hidden ${
-                  card.isToday ? 'ring-2 ring-blue-500 bg-gradient-to-br from-blue-50 to-white' : ''
+                className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer group overflow-hidden ${
+                  card.isToday
+                    ? 'ring-2 ring-blue-500 dark:ring-blue-400 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/20 dark:to-gray-800'
+                    : ''
                 }`}
               >
                 {/* Day Header */}
                 <div
-                  className={`p-3 border-b border-gray-100 ${
+                  className={`p-3 border-b border-gray-100 dark:border-gray-700 ${
                     card.isToday
-                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
-                      : 'bg-gray-50'
+                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 text-white'
+                      : 'bg-gray-50 dark:bg-gray-700/50'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <h3
                         className={`font-bold text-base ${
-                          card.isToday ? 'text-white' : 'text-gray-900'
+                          card.isToday ? 'text-white' : 'text-gray-900 dark:text-white'
                         }`}
                       >
                         @{card.displayDate}
                       </h3>
-                      <p className={`text-xs ${card.isToday ? 'text-blue-100' : 'text-gray-600'}`}>
+                      <p
+                        className={`text-xs ${card.isToday ? 'text-blue-100' : 'text-gray-600 dark:text-gray-400'}`}
+                      >
                         {card.fullDate}
                       </p>
                     </div>
@@ -652,7 +663,7 @@ const TodoPlannerPage: React.FC = () => {
                       className={`p-1.5 rounded-full transition-all duration-200 hover:scale-110 ${
                         card.isToday
                           ? 'bg-white/20 text-white hover:bg-white/30'
-                          : 'bg-blue-100 text-blue-600 hover:bg-blue-200'
+                          : 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/70'
                       }`}
                       title="Add task"
                     >
@@ -665,8 +676,10 @@ const TodoPlannerPage: React.FC = () => {
                 <div className="p-3 min-h-[180px]">
                   {card.tasks.length === 0 ? (
                     <div className="text-center py-6">
-                      <Calendar className="h-10 w-10 text-gray-300 mx-auto mb-2" />
-                      <p className="text-xs text-gray-500">No tasks for this day</p>
+                      <Calendar className="h-10 w-10 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        No tasks for this day
+                      </p>
                     </div>
                   ) : (
                     <div className="space-y-2">
@@ -675,10 +688,10 @@ const TodoPlannerPage: React.FC = () => {
                           key={task._id}
                           className={`border-l-4 ${getStatusBorder(
                             task.status,
-                          )} bg-gray-50 rounded-r-lg p-2.5 hover:bg-gray-100 transition-all duration-200 hover:shadow-sm group/task`}
+                          )} bg-gray-50 dark:bg-gray-700/50 rounded-r-lg p-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:shadow-sm group/task`}
                         >
                           <div className="flex items-start justify-between mb-1.5">
-                            <h4 className="text-xs font-semibold text-gray-900 line-clamp-2 group-hover/task:text-blue-700 transition-colors">
+                            <h4 className="text-xs font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover/task:text-blue-700 dark:group-hover/task:text-blue-400 transition-colors">
                               {task.title}
                             </h4>
                           </div>
@@ -696,10 +709,10 @@ const TodoPlannerPage: React.FC = () => {
                               <span
                                 className={`text-xs font-medium ${
                                   task.priority === 'high'
-                                    ? 'text-red-600'
+                                    ? 'text-red-600 dark:text-red-400'
                                     : task.priority === 'medium'
-                                      ? 'text-yellow-600'
-                                      : 'text-green-600'
+                                      ? 'text-yellow-600 dark:text-yellow-400'
+                                      : 'text-green-600 dark:text-green-400'
                                 }`}
                               >
                                 {task.priority?.toUpperCase()}

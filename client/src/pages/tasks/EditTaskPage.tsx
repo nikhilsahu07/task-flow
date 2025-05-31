@@ -88,8 +88,8 @@ const EditTaskPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">Loading task for editing...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto mb-4"></div>
+        <p className="text-gray-600 dark:text-gray-300">Loading task for editing...</p>
       </div>
     );
   }
@@ -97,14 +97,14 @@ const EditTaskPage: React.FC = () => {
   // Display error message if fetching failed or task is not found.
   if (error || !task) {
     return (
-      <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+      <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
         <div className="text-center py-8">
-          <p className="text-red-600 mb-4">
+          <p className="text-red-600 dark:text-red-400 mb-4">
             {error || 'Task not found or could not be loaded for editing.'}
           </p>
           <Link
             to="/tasks"
-            className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium rounded-md transition-colors"
           >
             <ArrowLeft className="h-5 w-5 mr-2" />
             Return to Task List
@@ -121,15 +121,17 @@ const EditTaskPage: React.FC = () => {
       <div className="mb-6">
         <Link
           to={`/tasks/${id}`}
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+          className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 transition-colors"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
           Cancel Edit & Back to Task
         </Link>
       </div>
 
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Edit Task</h1>
+      <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6">
+          Edit Task
+        </h1>
         {/* TaskForm is pre-filled with existing task data and handles the update submission. */}
         <TaskForm onSubmit={handleSubmit} initialData={task} isLoading={isSaving} />
       </div>
