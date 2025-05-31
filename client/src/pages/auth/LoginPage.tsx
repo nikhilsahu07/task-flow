@@ -1,26 +1,20 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Hook for programmatic navigation
-import LoginForm from '../../components/auth/LoginForm'; // The actual login form component
-import { isAuthenticated } from '../../api/authApi'; // Utility to check authentication status
+import { useNavigate } from 'react-router-dom';
+import LoginForm from '../../components/auth/LoginForm';
+import { isAuthenticated } from '../../api/authApi';
 
-// LoginPage provides the UI for user login.
-// It redirects to the dashboard if the user is already authenticated.
 const LoginPage: React.FC = () => {
-  const navigate = useNavigate(); // Used to redirect the user after login or if already logged in
+  const navigate = useNavigate();
 
-  // useEffect hook to check authentication status when the component mounts.
-  // If the user is already authenticated, they are redirected to the todo planner.
   useEffect(() => {
     if (isAuthenticated()) {
-      navigate('/todo-planner'); // Redirect to todo planner if already logged in
+      navigate('/todo-planner');
     }
-  }, [navigate]); // Dependency array includes navigate to ensure it\'s stable
+  }, [navigate]);
 
-  // Render the login page layout and the LoginForm component.
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center items-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">Welcome Back</h1>
+    <div className="fixed inset-0 flex items-center justify-center px-4 bg-gradient-to-br from-gray-50 to-indigo-50">
+      <div className="w-full max-w-md">
         <LoginForm />
       </div>
     </div>

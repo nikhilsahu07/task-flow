@@ -268,12 +268,12 @@ const TodoPlannerPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-2">
       <div className="max-w-7xl mx-auto">
-        {/* Weekly Task Statistics Bar */}
-        <div className="mb-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          {/* Always Visible Progress Bar */}
-          <div className="px-4 py-2">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-lg font-semibold text-gray-900">
+        {/* Weekly Task Statistics Bar - Made Compact */}
+        <div className="mb-1 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          {/* Always Visible Progress Bar - Compact */}
+          <div className="px-3 py-1.5">
+            <div className="flex items-center justify-between mb-1">
+              <h2 className="text-sm font-medium text-gray-800">
                 {weekOffset === 0
                   ? 'This Week'
                   : weekOffset > 0
@@ -282,30 +282,30 @@ const TodoPlannerPage: React.FC = () => {
               </h2>
               <button
                 onClick={() => setIsStatsExpanded(!isStatsExpanded)}
-                className="flex items-center space-x-1 px-2 py-1 rounded-md text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-200"
+                className="flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200"
               >
-                <span className="text-sm">{isStatsExpanded ? '▲' : '▼'}</span>
-                <span>{isStatsExpanded ? 'Collapse' : 'Expand'}</span>
+                <span className="text-xs">{isStatsExpanded ? '▲' : '▼'}</span>
+                <span className="hidden sm:inline">{isStatsExpanded ? 'Less' : 'More'}</span>
               </button>
             </div>
 
-            {/* Thin Progress Bar */}
-            <div className="space-y-1.5">
+            {/* Thin Progress Bar - More Compact */}
+            <div className="space-y-1">
               {(() => {
                 const progressPercentage =
                   weekStats.totalTasks > 0 ? (weekStats.doneTasks / weekStats.totalTasks) * 100 : 0;
 
                 return (
                   <>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-700 font-medium">
-                        {weekStats.doneTasks} of {weekStats.totalTasks} tasks completed
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-gray-600">
+                        {weekStats.doneTasks} of {weekStats.totalTasks} completed
                       </span>
-                      <span className="text-gray-600">{Math.round(progressPercentage)}%</span>
+                      <span className="text-gray-500">{Math.round(progressPercentage)}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5">
+                    <div className="w-full bg-gray-200 rounded-full h-1">
                       <div
-                        className="bg-gradient-to-r from-green-400 to-green-600 h-1.5 rounded-full transition-all duration-500 ease-out"
+                        className="bg-gradient-to-r from-green-400 to-green-600 h-1 rounded-full transition-all duration-500 ease-out"
                         style={{ width: `${progressPercentage}%` }}
                       ></div>
                     </div>
@@ -314,9 +314,9 @@ const TodoPlannerPage: React.FC = () => {
               })()}
             </div>
 
-            {/* Date Range (only when collapsed) */}
+            {/* Date Range (only when collapsed) - More Compact */}
             {!isStatsExpanded && (
-              <div className="mt-1.5 text-xs text-gray-500">
+              <div className="mt-1 text-xs text-gray-400">
                 {(() => {
                   // Get the actual week date range from filtered cards
                   const dates = filteredDayCards.map((card) => card.date).sort();
@@ -338,12 +338,12 @@ const TodoPlannerPage: React.FC = () => {
             )}
           </div>
 
-          {/* Expanded Statistics */}
+          {/* Expanded Statistics - More Compact */}
           {isStatsExpanded && (
-            <div className="border-t border-gray-200 px-4 py-3 bg-gray-50">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-md font-medium text-gray-700">Detailed Statistics</h3>
-                <div className="text-sm text-gray-500">
+            <div className="border-t border-gray-200 px-3 py-2 bg-gray-50">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-medium text-gray-700">Statistics</h3>
+                <div className="text-xs text-gray-500">
                   {(() => {
                     // Get the actual week date range from filtered cards
                     const dates = filteredDayCards.map((card) => card.date).sort();
@@ -364,103 +364,99 @@ const TodoPlannerPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {/* Total Tasks Scheduled */}
-                <div className="text-center p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200 hover:shadow-md transition-all duration-200">
-                  <div className="text-2xl font-bold text-gray-700 mb-1">
+                <div className="text-center p-2 bg-gradient-to-br from-gray-50 to-gray-100 rounded border border-gray-200 hover:shadow-sm transition-all duration-200">
+                  <div className="text-lg font-bold text-gray-700 mb-0.5">
                     {weekStats.totalTasks}
                   </div>
-                  <div className="text-sm text-gray-600 font-semibold">Tasks Scheduled</div>
-                  <div className="mt-1 text-xs text-gray-500">📋 Total for this week</div>
+                  <div className="text-xs text-gray-600 font-medium">Total</div>
                 </div>
 
                 {/* In Progress */}
-                <div className="text-center p-3 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg border border-yellow-200 hover:shadow-md transition-all duration-200">
-                  <div className="text-2xl font-bold text-yellow-700 mb-1">
+                <div className="text-center p-2 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded border border-yellow-200 hover:shadow-sm transition-all duration-200">
+                  <div className="text-lg font-bold text-yellow-700 mb-0.5">
                     {weekStats.inProgressTasks}
                   </div>
-                  <div className="text-sm text-yellow-700 font-semibold">In Progress</div>
-                  <div className="mt-1 text-xs text-yellow-600">⚡ Active tasks</div>
+                  <div className="text-xs text-yellow-700 font-medium">In Progress</div>
                 </div>
 
                 {/* Review */}
-                <div className="text-center p-3 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200 hover:shadow-md transition-all duration-200">
-                  <div className="text-2xl font-bold text-purple-700 mb-1">
+                <div className="text-center p-2 bg-gradient-to-br from-purple-50 to-purple-100 rounded border border-purple-200 hover:shadow-sm transition-all duration-200">
+                  <div className="text-lg font-bold text-purple-700 mb-0.5">
                     {weekStats.reviewTasks}
                   </div>
-                  <div className="text-sm text-purple-700 font-semibold">Review</div>
-                  <div className="mt-1 text-xs text-purple-600">👀 Pending review</div>
+                  <div className="text-xs text-purple-700 font-medium">Review</div>
                 </div>
 
                 {/* Done */}
-                <div className="text-center p-3 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200 hover:shadow-md transition-all duration-200">
-                  <div className="text-2xl font-bold text-green-700 mb-1">
+                <div className="text-center p-2 bg-gradient-to-br from-green-50 to-green-100 rounded border border-green-200 hover:shadow-sm transition-all duration-200">
+                  <div className="text-lg font-bold text-green-700 mb-0.5">
                     {weekStats.doneTasks}
                   </div>
-                  <div className="text-sm text-green-700 font-semibold">Done</div>
-                  <div className="mt-1 text-xs text-green-600">✅ Completed</div>
+                  <div className="text-xs text-green-700 font-medium">Done</div>
                 </div>
               </div>
             </div>
           )}
         </div>
 
-        {/* Header */}
-        <div className="mb-4">
-          <h1 className="text-3xl font-bold text-gray-900 mb-1">Task Planner</h1>
-          <p className="text-gray-600">Organize your tasks by day and status</p>
+        {/* Header - More Compact */}
+        <div className="mb-2">
+          <h1 className="text-2xl font-bold text-gray-900 mb-0.5">Task Planner</h1>
+          <p className="text-sm text-gray-600">Organize your tasks by day and status</p>
         </div>
 
-        {/* Status Filter */}
-        <div className="mb-4 bg-white rounded-xl shadow-sm border border-gray-200 p-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-semibold text-gray-700">Filter:</span>
+        {/* Status Filter - Much More Compact */}
+        <div className="mb-2 bg-white rounded-lg shadow-sm border border-gray-200 px-3 py-1.5">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-xs font-medium text-gray-600 mr-1">Filter:</span>
             <button
               onClick={() => setStatusFilter('all')}
-              className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200 ${
+              className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-200 ${
                 statusFilter === 'all'
-                  ? 'bg-gray-900 text-white shadow-md scale-105'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+                  ? 'bg-gray-900 text-white shadow-sm'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               All
             </button>
             <button
               onClick={() => setStatusFilter(TaskStatus.TODO)}
-              className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200 ${
+              className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-200 ${
                 statusFilter === TaskStatus.TODO
-                  ? 'bg-blue-600 text-white shadow-md scale-105'
-                  : 'bg-blue-50 text-blue-700 hover:bg-blue-100 hover:scale-105'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
               }`}
             >
               Todo
             </button>
             <button
               onClick={() => setStatusFilter(TaskStatus.IN_PROGRESS)}
-              className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200 ${
+              className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-200 ${
                 statusFilter === TaskStatus.IN_PROGRESS
-                  ? 'bg-yellow-500 text-white shadow-md scale-105'
-                  : 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100 hover:scale-105'
+                  ? 'bg-yellow-500 text-white shadow-sm'
+                  : 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100'
               }`}
             >
               In Progress
             </button>
             <button
               onClick={() => setStatusFilter(TaskStatus.REVIEW)}
-              className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200 ${
+              className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-200 ${
                 statusFilter === TaskStatus.REVIEW
-                  ? 'bg-purple-600 text-white shadow-md scale-105'
-                  : 'bg-purple-50 text-purple-700 hover:bg-purple-100 hover:scale-105'
+                  ? 'bg-purple-600 text-white shadow-sm'
+                  : 'bg-purple-50 text-purple-700 hover:bg-purple-100'
               }`}
             >
               Review
             </button>
             <button
               onClick={() => setStatusFilter(TaskStatus.DONE)}
-              className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200 ${
+              className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-200 ${
                 statusFilter === TaskStatus.DONE
-                  ? 'bg-green-600 text-white shadow-md scale-105'
-                  : 'bg-green-50 text-green-700 hover:bg-green-100 hover:scale-105'
+                  ? 'bg-green-600 text-white shadow-sm'
+                  : 'bg-green-50 text-green-700 hover:bg-green-100'
               }`}
             >
               Done

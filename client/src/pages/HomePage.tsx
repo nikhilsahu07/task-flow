@@ -13,17 +13,41 @@ import {
   Target,
   Kanban,
   LineChart as ChartLine,
+  ChevronDown,
 } from 'lucide-react';
 
 const HomePage: React.FC = () => {
+  const scrollToFeatures = () => {
+    const featuresSection = document.getElementById('core-features');
+    if (featuresSection) {
+      featuresSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <section className="pt-16 pb-20 px-4">
+      <section className="h-screen flex items-start justify-center px-4 pt-32">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center px-4 py-2 bg-indigo-50 rounded-full mb-8">
-            <Sparkles className="h-4 w-4 text-indigo-600 mr-2" />
-            <span className="text-sm font-medium text-indigo-600">Boost your productivity</span>
+          <div className="inline-flex items-center px-4 py-2 bg-indigo-50 rounded-full mb-8 hover:px-5 hover:py-2.5 hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-500/50 transition-all duration-700 ease-out transform hover:scale-105 cursor-pointer group relative overflow-hidden">
+            {/* Background filling animation */}
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-out origin-left"></div>
+
+            <Sparkles className="h-4 w-4 text-indigo-600 group-hover:text-white mr-2 group-hover:animate-pulse group-hover:drop-shadow-lg relative z-10 transition-all duration-300" />
+            <span className="text-sm font-medium text-indigo-600 group-hover:text-white group-hover:font-semibold group-hover:drop-shadow-sm relative z-10 transition-all duration-300">
+              Boost your productivity
+            </span>
+
+            {/* Glowing sparkles effect */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="absolute top-1 left-3 w-1 h-1 bg-white rounded-full animate-ping"></div>
+              <div className="absolute top-3 right-4 w-0.5 h-0.5 bg-white rounded-full animate-pulse delay-150"></div>
+              <div className="absolute bottom-2 left-8 w-0.5 h-0.5 bg-white rounded-full animate-ping delay-300"></div>
+              <div className="absolute bottom-1 right-6 w-1 h-1 bg-white rounded-full animate-pulse delay-75"></div>
+            </div>
           </div>
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             Transform your workflow with{' '}
@@ -43,18 +67,19 @@ const HomePage: React.FC = () => {
               Start for free
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
-            <Link
-              to="/demo"
-              className="px-8 py-4 bg-white text-gray-700 rounded-xl border border-gray-200 hover:border-gray-300 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+            <button
+              onClick={scrollToFeatures}
+              className="px-8 py-4 bg-white text-gray-700 rounded-xl border border-gray-200 hover:border-gray-300 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center"
             >
-              Watch demo
-            </Link>
+              Know More
+              <ChevronDown className="ml-2 h-5 w-5" />
+            </button>
           </div>
         </div>
       </section>
 
       {/* Core Features Section */}
-      <section className="py-20 bg-white">
+      <section id="core-features" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">

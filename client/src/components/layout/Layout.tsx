@@ -14,9 +14,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
 
-      <footer className="bg-white border-t border-gray-100 py-4">
+      <footer className="bg-white border-t border-gray-200 py-2 mt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-xs text-gray-400 tracking-wide">
+          <p className="text-center text-sm text-gray-600">
             &copy; {new Date().getFullYear()} TaskFlow. All rights reserved.
           </p>
         </div>

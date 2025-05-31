@@ -14,9 +14,8 @@ const RegisterPage: React.FC = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center items-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">Create an account</h1>
+    <div className="fixed inset-0 flex items-start justify-center bg-gradient-to-br from-gray-50 to-indigo-50 pt-17">
+      <div className="w-full max-w-md">
         <RegisterForm />
       </div>
     </div>
