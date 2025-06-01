@@ -45,9 +45,8 @@ interface AuthResponse {
   token: string;
 }
 
-/**
- * Register a new user
- */
+// Register a new user
+
 export const register = async (userData: RegisterFormData): Promise<ApiResponse<AuthResponse>> => {
   try {
     const { data } = await api.post<ApiResponse<AuthResponse>>('/auth/register', userData);
@@ -68,9 +67,8 @@ export const register = async (userData: RegisterFormData): Promise<ApiResponse<
   }
 };
 
-/**
- * Login a user
- */
+// Login a user
+
 export const login = async (credentials: LoginFormData): Promise<ApiResponse<AuthResponse>> => {
   try {
     const { data } = await api.post<ApiResponse<AuthResponse>>('/auth/login', credentials);
@@ -91,9 +89,8 @@ export const login = async (credentials: LoginFormData): Promise<ApiResponse<Aut
   }
 };
 
-/**
- * Get current user profile
- */
+// Get current user profile
+
 export const getProfile = async (): Promise<ApiResponse<{ user: User }>> => {
   try {
     const { data } = await api.get<ApiResponse<{ user: User }>>('/auth/profile');
@@ -107,24 +104,21 @@ export const getProfile = async (): Promise<ApiResponse<{ user: User }>> => {
   }
 };
 
-/**
- * Logout user by removing token from local storage
- */
+// Logout user by removing token from local storage
+
 export const logout = (): void => {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
 };
 
-/**
- * Check if user is authenticated
- */
+// Check if user is authenticated
+
 export const isAuthenticated = (): boolean => {
   return !!localStorage.getItem('token');
 };
 
-/**
- * Get current user from local storage
- */
+// Get current user from local storage
+
 export const getCurrentUser = (): User | null => {
   const userJson = localStorage.getItem('user');
   return userJson ? JSON.parse(userJson) : null;

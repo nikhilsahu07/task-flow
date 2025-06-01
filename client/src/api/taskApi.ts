@@ -27,7 +27,7 @@ export const taskSchema = z.object({
         if (typeof arg === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(arg)) {
           return `${arg}T00:00:00.000Z`; // Convert YYYY-MM-DD to ISO datetime
         }
-        return arg; // Pass through other values (like actual ISO strings or null/undefined)
+        return arg;
       },
       z
         .string()
@@ -43,7 +43,7 @@ export const taskSchema = z.object({
       if (typeof arg === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(arg)) {
         return `${arg}T00:00:00.000Z`; // Convert YYYY-MM-DD to ISO datetime
       }
-      return arg; // Pass through other values (like actual ISO strings or null/undefined)
+      return arg;
     },
     z.string().datetime({
       message: 'Invalid date format for createdFor date. Please use ISO 8601 format.',
@@ -66,12 +66,9 @@ interface TaskListResponse {
   };
 }
 
-/**
- * Create a new task
- */
+// Create a new task
 export const createTask = async (taskData: TaskFormData): Promise<ApiResponse<{ task: Task }>> => {
   try {
-    console.log('Creating task with data:', JSON.stringify(taskData, null, 2));
     const { data } = await api.post<ApiResponse<{ task: Task }>>('/tasks', taskData);
     return data;
   } catch (error: any) {
@@ -84,14 +81,11 @@ export const createTask = async (taskData: TaskFormData): Promise<ApiResponse<{ 
   }
 };
 
-/**
- * Get all tasks with filtering and pagination
- */
+// Get all tasks with filtering and pagination
 export const getTasks = async (
   filterOptions: TaskFilterOptions = {},
 ): Promise<ApiResponse<TaskListResponse>> => {
   try {
-    // Convert filter options to query parameters
     const params = new URLSearchParams();
 
     if (filterOptions.status) {
@@ -134,9 +128,7 @@ export const getTasks = async (
   }
 };
 
-/**
- * Get a task by ID
- */
+// Get a task by ID
 export const getTaskById = async (taskId: string): Promise<ApiResponse<{ task: Task }>> => {
   try {
     const { data } = await api.get<ApiResponse<{ task: Task }>>(`/tasks/${taskId}`);
@@ -150,9 +142,7 @@ export const getTaskById = async (taskId: string): Promise<ApiResponse<{ task: T
   }
 };
 
-/**
- * Update a task
- */
+// Update a task
 export const updateTask = async (
   taskId: string,
   taskData: Partial<TaskFormData>,
@@ -169,9 +159,7 @@ export const updateTask = async (
   }
 };
 
-/**
- * Delete a task
- */
+// Delete a task
 export const deleteTask = async (taskId: string): Promise<ApiResponse<null>> => {
   try {
     const { data } = await api.delete<ApiResponse<null>>(`/tasks/${taskId}`);
@@ -185,9 +173,7 @@ export const deleteTask = async (taskId: string): Promise<ApiResponse<null>> => 
   }
 };
 
-/**
- * Get tasks for a specific date (YYYYMMDD format)
- */
+// Get tasks for a specific date (YYYYMMDD format)
 export const getTasksByDate = async (
   date: string,
 ): Promise<
@@ -225,9 +211,7 @@ export const getTasksByDate = async (
   }
 };
 
-/**
- * Create a task for a specific date (YYYYMMDD format)
- */
+// Create a task for a specific date (YYYYMMDD format)
 export const createTaskForDate = async (
   date: string,
   taskData: TaskFormData,
@@ -248,7 +232,6 @@ export const createTaskForDate = async (
       };
     }
 
-    console.log(`Creating task for date ${date} with data:`, JSON.stringify(taskData, null, 2));
     const { data } = await api.post<
       ApiResponse<{
         task: Task;

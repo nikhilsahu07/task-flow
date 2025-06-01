@@ -54,14 +54,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
     // Save to localStorage
     localStorage.setItem('taskflow-theme', theme);
-
-    // Debug log
-    console.log('Theme applied:', theme, 'HTML classes:', Array.from(root.classList));
   }, [theme]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
-    console.log('Toggling theme from', theme, 'to', newTheme);
     setTheme(newTheme);
   };
 
