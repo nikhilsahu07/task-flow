@@ -1,0 +1,5 @@
+server/
+node_modules/
+.husky/
+package.json
+package-lock.json
