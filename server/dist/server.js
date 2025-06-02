@@ -22,8 +22,17 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 // Middleware Setup
 // Enable CORS - allows frontend to make API requests
+const allowedOrigins = 'http://localhost:5173';
 app.use((0, cors_1.default)({
-    origin: process.env.CORS_ORIGIN || '*',
+    origin: (origin, callback) => {
+        // Allow no origin (e.g., curl or Postman)
+        if (!origin || allowedOrigins?.includes(origin)) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
 }));
 // Add security headers to protect against common web vulnerabilities (e.g. XSS, CSRF, etc.)

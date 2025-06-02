@@ -24,13 +24,13 @@ const app = express();
 // Middleware Setup
 
 // Enable CORS - allows frontend to make API requests
-const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [];
+const allowedOrigins = 'http://localhost:5173';
 
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow no origin (e.g., curl or Postman)
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins?.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
