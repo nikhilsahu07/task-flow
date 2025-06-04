@@ -2,9 +2,8 @@ import { Request, Response } from 'express';
 import { Error as MongooseError } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
-/**
- * Global error handling middleware
- */
+// Global error handling middleware
+
 export const errorHandler = (err: Error, _req: Request, res: Response): void => {
   // Generate a unique error ID for tracking
   const errorId = uuidv4();
@@ -46,9 +45,8 @@ export const errorHandler = (err: Error, _req: Request, res: Response): void => 
   });
 };
 
-/**
- * Handle 404 errors for routes that don't exist
- */
+// Handle 404 errors for routes that don't exist
+
 export const notFoundHandler = (req: Request, res: Response): void => {
   res.status(404).json({
     success: false,

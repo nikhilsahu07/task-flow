@@ -2,9 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authorize = exports.authenticate = void 0;
 const jwt_1 = require("../utils/jwt");
-/**
- * Middleware to authenticate users by verifying JWT token
- */
+// Middleware to authenticate users by verifying JWT token
 const authenticate = (req, res, next) => {
     try {
         // Get the authorization header
@@ -39,9 +37,7 @@ const authenticate = (req, res, next) => {
     }
 };
 exports.authenticate = authenticate;
-/**
- * Middleware to authorize users based on role
- */
+// Middleware to authorize users based on role
 const authorize = (roles) => {
     return (req, res, next) => {
         const authReq = req;

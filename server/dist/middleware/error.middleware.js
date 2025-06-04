@@ -3,9 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.notFoundHandler = exports.errorHandler = void 0;
 const mongoose_1 = require("mongoose");
 const uuid_1 = require("uuid");
-/**
- * Global error handling middleware
- */
+// Global error handling middleware
 const errorHandler = (err, _req, res) => {
     // Generate a unique error ID for tracking
     const errorId = (0, uuid_1.v4)();
@@ -45,9 +43,7 @@ const errorHandler = (err, _req, res) => {
     });
 };
 exports.errorHandler = errorHandler;
-/**
- * Handle 404 errors for routes that don't exist
- */
+// Handle 404 errors for routes that don't exist
 const notFoundHandler = (req, res) => {
     res.status(404).json({
         success: false,

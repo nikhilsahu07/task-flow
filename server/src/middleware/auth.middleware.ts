@@ -2,9 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt';
 import { AuthRequest, UserRole } from '../types';
 
-/**
- * Middleware to authenticate users by verifying JWT token
- */
+// Middleware to authenticate users by verifying JWT token
+
 export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
   try {
     // Get the authorization header
@@ -43,9 +42,8 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
   }
 };
 
-/**
- * Middleware to authorize users based on role
- */
+// Middleware to authorize users based on role
+
 export const authorize = (roles: UserRole[]) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const authReq = req as AuthRequest;

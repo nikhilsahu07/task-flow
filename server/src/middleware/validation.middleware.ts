@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError, ZodType } from 'zod';
 
-/**
- * Middleware to validate request data against a Zod schema
- */
+// Middleware to validate request data against a Zod schema
+
 export const validate = (schema: ZodType) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {
@@ -34,9 +33,8 @@ export const validate = (schema: ZodType) => {
   };
 };
 
-/**
- * Middleware to validate request query parameters against a Zod schema
- */
+// Middleware to validate request query parameters against a Zod schema
+
 export const validateQuery = (schema: ZodType) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {

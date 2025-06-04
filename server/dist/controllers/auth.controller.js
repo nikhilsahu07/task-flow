@@ -3,9 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updatePassword = exports.getProfile = exports.login = exports.register = void 0;
 const User_1 = require("../models/User");
 const jwt_1 = require("../utils/jwt");
-/**
- * Register a new user
- */
+// Register a new user
 const register = async (req, res) => {
     // Cast request body to RegisterRequest type
     const { name, email, password, role } = req.body;
@@ -53,9 +51,7 @@ const register = async (req, res) => {
     }
 };
 exports.register = register;
-/**
- * Login a user
- */
+// Login a user
 const login = async (req, res) => {
     // Cast request body to LoginRequest type
     const { email, password } = req.body;
@@ -97,9 +93,7 @@ const login = async (req, res) => {
     }
 };
 exports.login = login;
-/**
- * Get current user profile
- */
+// Get current user profile
 const getProfile = async (req, res) => {
     try {
         const { id } = req.user;
@@ -136,9 +130,7 @@ const getProfile = async (req, res) => {
     }
 };
 exports.getProfile = getProfile;
-/**
- * Update user password
- */
+// Update user password
 const updatePassword = async (req, res) => {
     try {
         const { id } = req.user;

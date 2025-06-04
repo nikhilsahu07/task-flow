@@ -1,8 +1,8 @@
-import { z } from 'zod'; // Zod is a TypeScript-first schema declaration and validation library
-import { UserRole } from '../types'; // Import UserRole enum for role validation
+import { z } from 'zod';
+import { UserRole } from '../types';
 
-// Schema for validating user registration requests.
-// Ensures name, email, and password meet specific criteria.
+// Schema for validation
+// Ensures name, email, and password meet specific criteria
 export const registerSchema = z.object({
   name: z
     .string()
@@ -17,24 +17,23 @@ export const registerSchema = z.object({
     .string()
     .min(6, 'Password must be at least 6 characters long')
     .max(100, 'Password cannot exceed 100 characters')
-    // Enforce password complexity: at least one lowercase, one uppercase, and one digit.
+
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
       'Password requires an uppercase letter, a lowercase letter, and a number',
     ),
-  // Role is optional and defaults to USER if not provided.
+  // Role is optional & default user
   role: z.enum([UserRole.ADMIN, UserRole.USER]).optional().default(UserRole.USER),
 });
 
 // Schema for validating user login requests.
-// Requires email and a non-empty password.
+
 export const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(1, 'Password is required'), // Simple check for presence
 });
 
 // Schema for validating password update requests.
-// Ensures current password is provided, new password meets complexity, and new passwords match.
 export const passwordUpdateSchema = z
   .object({
     currentPassword: z.string().min(1, 'Current password is required'),
@@ -52,10 +51,10 @@ export const passwordUpdateSchema = z
   // Custom refinement to check if newPassword and confirmPassword match.
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: 'New passwords do not match',
-    path: ['confirmPassword'], // Associates the error with the confirmPassword field
+    path: ['confirmPassword'],
   });
 
-// TypeScript types inferred from the Zod schemas for use in controllers and services.
+// TypeScript types inferred from the Zod schemas for use in controllers and services
 export type RegisterRequest = z.infer<typeof registerSchema>;
 export type LoginRequest = z.infer<typeof loginSchema>;
 export type PasswordUpdateRequest = z.infer<typeof passwordUpdateSchema>;

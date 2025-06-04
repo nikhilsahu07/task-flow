@@ -6,9 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createTaskForDate = exports.getTasksByDate = exports.deleteTask = exports.updateTask = exports.getTaskById = exports.getTasks = exports.createTask = void 0;
 const Task_1 = require("../models/Task");
 const mongoose_1 = __importDefault(require("mongoose"));
-/**
- * Create a new task
- */
+// Create a new task
 const createTask = async (req, res) => {
     try {
         const { id: userId } = req.user;
@@ -49,9 +47,7 @@ const createTask = async (req, res) => {
     }
 };
 exports.createTask = createTask;
-/**
- * Get all tasks with filtering and pagination
- */
+// Get all tasks with filtering and pagination
 const getTasks = async (req, res) => {
     try {
         const { id: userId, role } = req.user;
@@ -128,9 +124,7 @@ const getTasks = async (req, res) => {
     }
 };
 exports.getTasks = getTasks;
-/**
- * Get a single task by ID
- */
+// Get a single task by ID
 const getTaskById = async (req, res) => {
     try {
         const { id: taskId } = req.params;
@@ -194,9 +188,7 @@ const getTaskById = async (req, res) => {
     }
 };
 exports.getTaskById = getTaskById;
-/**
- * Update a task
- */
+// Update a task
 const updateTask = async (req, res) => {
     try {
         const { id: taskId } = req.params;
@@ -282,9 +274,7 @@ const updateTask = async (req, res) => {
     }
 };
 exports.updateTask = updateTask;
-/**
- * Delete a task
- */
+// Delete a task
 const deleteTask = async (req, res) => {
     try {
         const { id: taskId } = req.params;
@@ -347,9 +337,7 @@ const deleteTask = async (req, res) => {
     }
 };
 exports.deleteTask = deleteTask;
-/**
- * Get tasks for a specific date (YYYYMMDD format)
- */
+// Get tasks for a specific date (YYYYMMDD format)
 const getTasksByDate = async (req, res) => {
     try {
         const { id: userId, role } = req.user;
@@ -413,9 +401,7 @@ const getTasksByDate = async (req, res) => {
     }
 };
 exports.getTasksByDate = getTasksByDate;
-/**
- * Create a task for a specific date (YYYYMMDD format)
- */
+// Create a task for a specific date (YYYYMMDD format)
 const createTaskForDate = async (req, res) => {
     try {
         const { id: userId } = req.user;

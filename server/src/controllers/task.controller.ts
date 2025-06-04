@@ -8,9 +8,8 @@ import {
 } from '../validators/task.validator';
 import mongoose from 'mongoose';
 
-/**
- * Create a new task
- */
+// Create a new task
+
 export const createTask = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id: userId } = (req as AuthRequest).user!;
@@ -53,9 +52,8 @@ export const createTask = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-/**
- * Get all tasks with filtering and pagination
- */
+// Get all tasks with filtering and pagination
+
 export const getTasks = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id: userId, role } = (req as AuthRequest).user!;
@@ -141,9 +139,8 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-/**
- * Get a single task by ID
- */
+// Get a single task by ID
+
 export const getTaskById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id: taskId } = req.params;
@@ -216,9 +213,8 @@ export const getTaskById = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-/**
- * Update a task
- */
+// Update a task
+
 export const updateTask = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id: taskId } = req.params;
@@ -321,9 +317,8 @@ export const updateTask = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-/**
- * Delete a task
- */
+// Delete a task
+
 export const deleteTask = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id: taskId } = req.params;
@@ -396,9 +391,8 @@ export const deleteTask = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-/**
- * Get tasks for a specific date (YYYYMMDD format)
- */
+// Get tasks for a specific date (YYYYMMDD format)
+
 export const getTasksByDate = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id: userId, role } = (req as AuthRequest).user!;
@@ -468,9 +462,8 @@ export const getTasksByDate = async (req: Request, res: Response): Promise<void>
   }
 };
 
-/**
- * Create a task for a specific date (YYYYMMDD format)
- */
+// Create a task for a specific date (YYYYMMDD format)
+
 export const createTaskForDate = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id: userId } = (req as AuthRequest).user!;

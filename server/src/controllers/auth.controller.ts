@@ -4,9 +4,8 @@ import { generateToken } from '../utils/jwt';
 import { AuthRequest } from '../types';
 import { LoginRequest, RegisterRequest, PasswordUpdateRequest } from '../validators/auth.validator';
 
-/**
- * Register a new user
- */
+// Register a new user
+
 export const register = async (req: Request, res: Response): Promise<void> => {
   // Cast request body to RegisterRequest type
   const { name, email, password, role } = req.body as RegisterRequest;
@@ -57,9 +56,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-/**
- * Login a user
- */
+// Login a user
+
 export const login = async (req: Request, res: Response): Promise<void> => {
   // Cast request body to LoginRequest type
   const { email, password } = req.body as LoginRequest;
@@ -104,9 +102,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-/**
- * Get current user profile
- */
+// Get current user profile
+
 export const getProfile = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = (req as AuthRequest).user!;
@@ -145,9 +142,8 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-/**
- * Update user password
- */
+// Update user password
+
 export const updatePassword = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = (req as AuthRequest).user!;

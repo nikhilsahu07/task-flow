@@ -2,9 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateQuery = exports.validate = void 0;
 const zod_1 = require("zod");
-/**
- * Middleware to validate request data against a Zod schema
- */
+// Middleware to validate request data against a Zod schema
 const validate = (schema) => {
     return (req, res, next) => {
         try {
@@ -33,9 +31,7 @@ const validate = (schema) => {
     };
 };
 exports.validate = validate;
-/**
- * Middleware to validate request query parameters against a Zod schema
- */
+// Middleware to validate request query parameters against a Zod schema
 const validateQuery = (schema) => {
     return (req, res, next) => {
         try {
