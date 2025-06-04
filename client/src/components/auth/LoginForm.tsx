@@ -5,11 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { login, loginSchema, LoginFormData } from '../../api/authApi';
-import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react'; // Icons for visual enhancement
+import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 const LoginForm: React.FC = () => {
-  // React Router's navigation hook
   const navigate = useNavigate();
   const { login: authLogin } = useAuth();
 
@@ -36,24 +35,18 @@ const LoginForm: React.FC = () => {
     setError(null);
 
     try {
-      // Call the login API function with form data
       const response = await login(data);
 
       if (response.success && response.data) {
-        // Update auth context with user data
         authLogin(response.data.user);
 
-        // Redirect to todo planner on successful login
         navigate('/todo-planner');
       } else {
-        // Display error message from the server
         setError(response.error?.toString() || 'Login failed. Please try again.');
       }
     } catch (_err) {
-      // Handle unexpected errors (like network issues)
       setError('An unexpected error occurred. Please try again.');
     } finally {
-      // Reset loading state whether login succeeds or fails
       setIsLoading(false);
     }
   };

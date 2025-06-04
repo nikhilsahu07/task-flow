@@ -5,13 +5,13 @@ import { ArrowLeft } from 'lucide-react';
 import { createTask, createTaskForDate, TaskFormData, taskSchema } from '../../api/taskApi';
 import TaskForm from '../../components/tasks/TaskForm';
 
-// CreateTaskPage provides a form for users to create new tasks.
+// CreateTaskPage -> forms for creating new tasks
 const CreateTaskPage: React.FC = () => {
   const navigate = useNavigate();
   const { date } = useParams<{ date: string }>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Parse the date parameter (YYYYMMDD format) and convert to YYYY-MM-DD
+  // Parse YYYYMMDD to YYYY-MM-DD
   const parsedDate = React.useMemo(() => {
     if (!date || date.length !== 8) return null;
 
@@ -20,12 +20,12 @@ const CreateTaskPage: React.FC = () => {
     const day = parseInt(date.substring(6, 8), 10);
 
     try {
-      // Validate date components
+      // Validate date components (YYYY-MM-DD)
       if (year < 1900 || year > 3000 || month < 1 || month > 12 || day < 1 || day > 31) {
         return null;
       }
 
-      // Create the date string in YYYY-MM-DD format
+      // Create the date string in YYYY-MM-DD
       const monthStr = String(month).padStart(2, '0');
       const dayStr = String(day).padStart(2, '0');
       return `${year}-${monthStr}-${dayStr}`;
@@ -65,13 +65,13 @@ const CreateTaskPage: React.FC = () => {
         // Use the date-specific API endpoint
         response = await createTaskForDate(date, taskData);
       } else {
-        // Use the general API endpoint (though this should be rare now)
+        // Use the general API endpoint - durlabh hai
         response = await createTask(taskData);
       }
 
       if (response.success) {
         toast.success('Task created successfully!');
-        // If we came from a specific date, redirect back to that date's dashboard
+        // If came from a specific date, redirect back to that date's dashboard
         if (isDateSpecific) {
           navigate(`/dashboard/${date}`);
         } else {

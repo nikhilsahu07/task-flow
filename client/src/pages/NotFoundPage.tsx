@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // For navigation back to home or other pages
-import { ArrowLeft } from 'lucide-react'; // Icon for the back button
+import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
-// NotFoundPage is displayed when a user navigates to a route that doesn't exist.
+// NotFoundPage - displayed when a user navigates to a route that doesn't exist
 const NotFoundPage: React.FC = () => {
   return (
     // Basic styling to center the content on the page.

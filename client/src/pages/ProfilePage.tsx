@@ -4,14 +4,13 @@ import { User, Shield } from 'lucide-react';
 import { getProfile } from '../api/authApi';
 import { User as UserType } from '../types';
 
-// ProfilePage displays the authenticated user's profile information.
 const ProfilePage: React.FC = () => {
-  // State for storing user data, loading status, and any errors.
+  // States for user data, loading status, and any errors
   const [user, setUser] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetches the user's profile data when the component mounts.
+  // Fetches the user's profile data when the component mounts
   useEffect(() => {
     const fetchProfile = async () => {
       setIsLoading(true);
@@ -49,7 +48,7 @@ const ProfilePage: React.FC = () => {
     );
   }
 
-  // Display an error message if fetching failed or user data is not available.
+  // Display an error message if fetching failed/user data is not available
   if (error || !user) {
     return (
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
@@ -62,7 +61,7 @@ const ProfilePage: React.FC = () => {
     );
   }
 
-  // Render the user's profile information.
+  // user's profile information
   return (
     <div className="max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Your Profile</h1>
@@ -76,10 +75,10 @@ const ProfilePage: React.FC = () => {
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{user.name}</h2>
             <div className="flex items-center mt-1">
               <p className="text-gray-500 dark:text-gray-400">{user.email}</p>
-              {/* Display user role with a small badge */}
+              {/* User role - small badge */}
               <span className="inline-flex items-center ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
                 <Shield className="h-3 w-3 mr-1" />
-                {user.role} {/* Assuming role is a string like 'admin' or 'user' */}
+                {user.role}
               </span>
             </div>
           </div>
@@ -115,7 +114,7 @@ const ProfilePage: React.FC = () => {
         </div>
 
         <div className="mt-8">
-          {/* Placeholder for future profile update functionality */}
+          {/* future goals hai jii */}
           <button
             onClick={() => toast.info('Editing your profile will be available soon!')}
             className="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white font-medium rounded-md transition-colors"

@@ -6,21 +6,18 @@ import { getTaskById, updateTask, TaskFormData, taskSchema } from '../../api/tas
 import { Task } from '../../types';
 import TaskForm from '../../components/tasks/TaskForm';
 
-// EditTaskPage allows users to modify an existing task.
+// EditTaskPage -> to modify an existing task
 const EditTaskPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  // State for storing the task data to be edited
+  // States for task data, loading status, and any errors
   const [task, setTask] = useState<Task | null>(null);
-  // State for loading indicator while fetching initial task data
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  // State for loading indicator during form submission (saving)
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  // State for storing any errors during API calls
   const [error, setError] = useState<string | null>(null);
 
-  // useEffect hook to fetch the task data when the component mounts or the ID changes.
+  // useEffect hook to fetch the task data when the component mounts or the ID changes
   useEffect(() => {
     const fetchTask = async () => {
       if (!id) {
@@ -53,11 +50,11 @@ const EditTaskPage: React.FC = () => {
 
   // Handles the submission of the edited task data.
   const handleSubmit = async (data: TaskFormData) => {
-    if (!id) return; // Should not happen if task is loaded
+    if (!id) return; // !if task is loaded
 
-    setIsSaving(true); // Indicate that saving is in progress
+    setIsSaving(true); // saving is in progress
 
-    // Process the data through the client-side schema to ensure proper formatting
+    // Process the data through the client-side schema
     let taskData: Partial<TaskFormData>;
     try {
       // Import the schema and process the data
@@ -70,21 +67,21 @@ const EditTaskPage: React.FC = () => {
     }
 
     try {
-      const response = await updateTask(id, taskData); // Call API to update the task
+      const response = await updateTask(id, taskData);
       if (response.success) {
         toast.success('Task updated successfully!');
-        navigate(`/tasks/${id}`); // Navigate to the task detail page after successful update
+        navigate(`/tasks/${id}`);
       } else {
         toast.error(response.error?.toString() || 'Failed to update task.');
       }
     } catch (_err) {
       toast.error('An unexpected error occurred while updating the task.');
     } finally {
-      setIsSaving(false); // Reset saving state
+      setIsSaving(false);
     }
   };
 
-  // Display loading spinner while initial task data is being fetched.
+  // Display loading spinner while initial task data is being fetched
   if (isLoading) {
     return (
       <div className="text-center py-12">
@@ -94,7 +91,7 @@ const EditTaskPage: React.FC = () => {
     );
   }
 
-  // Display error message if fetching failed or task is not found.
+  // error message if fetching failed or task is not found
   if (error || !task) {
     return (
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
@@ -114,7 +111,7 @@ const EditTaskPage: React.FC = () => {
     );
   }
 
-  // Render the task form with initial data for editing.
+  // task form with initial data for editing
   return (
     <div className="max-w-3xl mx-auto">
       {/* Back navigation link to the task detail page */}
@@ -132,7 +129,7 @@ const EditTaskPage: React.FC = () => {
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6">
           Edit Task
         </h1>
-        {/* TaskForm is pre-filled with existing task data and handles the update submission. */}
+        {/* task form */}
         <TaskForm onSubmit={handleSubmit} initialData={task} isLoading={isSaving} />
       </div>
     </div>

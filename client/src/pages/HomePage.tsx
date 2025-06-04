@@ -34,7 +34,7 @@ const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto text-center">
           {/* Enhanced Boost Your Productivity Badge */}
           <div className="inline-flex items-center px-6 py-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full mb-8 hover:shadow-2xl transition-all duration-500 ease-out transform hover:scale-105 cursor-pointer group relative overflow-hidden border border-gray-200/50 dark:border-gray-700/50">
-            {/* Background filling animation - 1.5 seconds linear */}
+            {/* Background filling animation */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-[1500ms] ease-linear origin-left"></div>
 
             <Sparkles className="h-5 w-5 text-indigo-600 dark:text-indigo-400 group-hover:text-white mr-3 relative z-10 transition-all duration-300 group-hover:animate-pulse group-hover:drop-shadow-lg" />
@@ -42,7 +42,7 @@ const HomePage: React.FC = () => {
               Boost your productivity
             </span>
 
-            {/* Glowing sparkles effect - appears after 1.5 seconds */}
+            {/* Glowing sparkles effect */}
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-[1500ms]">
               <div className="absolute top-2 left-4 w-1.5 h-1.5 bg-white rounded-full animate-ping"></div>
               <div className="absolute top-4 right-6 w-1 h-1 bg-white rounded-full animate-pulse delay-150"></div>

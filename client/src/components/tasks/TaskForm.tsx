@@ -4,26 +4,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { TaskFormData, taskSchema } from '../../api/taskApi';
 import { TaskPriority, TaskStatus, Task } from '../../types';
 
-/**
- * Props for the TaskForm component.
- */
+// Props for the TaskForm component
 interface TaskFormProps {
-  /** Callback function to handle form submission with task data. */
   onSubmit: (data: TaskFormData) => void;
-  /** Optional initial data for the task form, used for editing existing tasks. */
   initialData?: Task;
-  /** Boolean indicating if the form is currently submitting (loading state). */
   isLoading: boolean;
-  /** Optional default date for which the task is being created (createdFor) */
   defaultCreatedFor?: string;
-  /** Whether to hide the createdFor field (when date is specified in URL) */
   hideCreatedFor?: boolean;
 }
 
-/**
- * TaskForm component provides a form for creating or editing tasks.
- * It uses React Hook Form for form handling and Zod for validation.
- */
+// TaskForm component provides a form for creating or editing tasks
 const TaskForm: React.FC<TaskFormProps> = ({
   onSubmit,
   initialData,
@@ -31,27 +21,23 @@ const TaskForm: React.FC<TaskFormProps> = ({
   defaultCreatedFor,
   hideCreatedFor = false,
 }) => {
-  // Initialize react-hook-form.
-  // `zodResolver` integrates Zod for schema-based validation.
-  // `defaultValues` are populated from `initialData` if provided (for editing),
-  // otherwise, they are set to defaults for a new task.
+  // Initialize react-hook-form and zodResolver
+  // defaultValues are populated from `initialData` if provided (for editing)
   const {
-    register, // Function to connect form inputs to react-hook-form
-    handleSubmit, // Handles form submission and validation
-    formState: { errors }, // Contains form state, including any validation errors
+    register,
+    handleSubmit,
+    formState: { errors },
   } = useForm<TaskFormData>({
-    resolver: zodResolver(taskSchema), // Use Zod schema for validation
+    resolver: zodResolver(taskSchema),
     defaultValues: initialData
       ? {
           title: initialData.title,
           description: initialData.description,
           status: initialData.status,
           priority: initialData.priority,
-          // Ensure dueDate is in YYYY-MM-DD format for the date input
           dueDate: initialData.dueDate ? initialData.dueDate.split('T')[0] : '',
-          // Ensure createdFor is in YYYY-MM-DD format for the date input
           createdFor: initialData.createdFor ? initialData.createdFor.split('T')[0] : '',
-          assignedTo: initialData.assignedTo?._id, // Store only the ID of the assigned user
+          assignedTo: initialData.assignedTo?._id,
         }
       : {
           title: '',

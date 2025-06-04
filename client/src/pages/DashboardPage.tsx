@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// DashboardPage now simply redirects to today's date-specific dashboard
+// DashboardPage -> today's date-specific dashboard
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get today's date in YYYYMMDD format
+    // today's date in YYYYMMDD format
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');

@@ -472,9 +472,9 @@ const TaskListPage: React.FC = () => {
       <ConfirmDialog
         isOpen={isDeleteDialogOpen}
         title="Confirm Task Deletion"
-        message={`Are you sure you want to permanently delete "${taskToDeleteTitle}"? This action cannot be undone.`}
+        message={`Are you sure you want to permanently delete "${taskToDeleteTitle}"?`}
         confirmText="Delete Task"
-        cancelText="Cancel"
+        variant="primary"
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
       />

@@ -6,10 +6,8 @@ interface PrivateRouteProps {
   children: ReactNode;
 }
 
-/**
- * Component to protect routes that require authentication
- * Uses React Router's Navigate component to redirect unauthorized users
- */
+// Component to protect routes that require auth
+
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const location = useLocation();
   const { isLoggedIn } = useAuth();

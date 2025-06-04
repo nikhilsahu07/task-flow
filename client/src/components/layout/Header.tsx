@@ -296,13 +296,13 @@ const Header: React.FC = () => {
       <ConfirmDialog
         isOpen={isLogoutDialogOpen}
         title="Sign Out Confirmation"
-        message="You're about to sign out of your account. Any unsaved changes may be lost. Do you want to continue?"
+        message="You're about to sign out of your account. Do you want to continue?"
         confirmText="Sign Out"
-        cancelText="Cancel"
+        variant="danger"
         onConfirm={handleConfirmLogout}
         onCancel={handleCancelLogout}
         position="top-middle"
-        variant="danger"
+        showBackdrop={true}
       />
     </>
   );

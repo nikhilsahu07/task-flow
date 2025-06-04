@@ -95,16 +95,16 @@ const TodoPlannerPage: React.FC = () => {
           if (i === 0) {
             day.displayDate = 'Today';
           }
-          // Keep original day names for all other days (no "Tomorrow")
+          // Original day names for all other days
 
           days.push(day);
         }
       } else {
-        // Fallback: if today is not in current week (shouldn't happen)
+        // Fallback: if today is not in current week
         days.push(...weekDays);
       }
     } else {
-      // For other weeks, show Sunday to Saturday normally
+      // For other weeks,Sunday to Saturday normally
       days.push(...weekDays);
     }
 
@@ -156,8 +156,8 @@ const TodoPlannerPage: React.FC = () => {
   };
 
   const handleAddTask = (date: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent day click
-    const formattedDate = date.replace(/-/g, ''); // Convert YYYY-MM-DD to YYYYMMDD
+    e.stopPropagation();
+    const formattedDate = date.replace(/-/g, '');
     navigate(`/tasks/create/${formattedDate}`);
   };
 
@@ -257,9 +257,9 @@ const TodoPlannerPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 p-2">
       <div className="max-w-7xl mx-auto">
-        {/* Weekly Task Statistics Bar - Made Compact */}
+        {/* Weekly Task Statistics Bar */}
         <div className="mb-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-          {/* Always Visible Progress Bar - Compact */}
+          {/* Always Visible Progress Bar */}
           <div className="px-3 py-1.5">
             <div className="flex items-center justify-between mb-1">
               <h2 className="text-sm font-medium text-gray-800 dark:text-gray-200">
@@ -278,7 +278,7 @@ const TodoPlannerPage: React.FC = () => {
               </button>
             </div>
 
-            {/* Thin Progress Bar - More Compact */}
+            {/* Thin Progress Bar */}
             <div className="space-y-1">
               {(() => {
                 const progressPercentage =
@@ -305,7 +305,7 @@ const TodoPlannerPage: React.FC = () => {
               })()}
             </div>
 
-            {/* Date Range (only when collapsed) - More Compact */}
+            {/* Date Range (only when collapsed) */}
             {!isStatsExpanded && (
               <div className="mt-1 text-xs text-gray-400 dark:text-gray-500">
                 {(() => {
@@ -329,7 +329,7 @@ const TodoPlannerPage: React.FC = () => {
             )}
           </div>
 
-          {/* Expanded Statistics - More Compact */}
+          {/* Expanded Statistics */}
           {isStatsExpanded && (
             <div className="border-t border-gray-200 dark:border-gray-700 px-3 py-2 bg-gray-50 dark:bg-gray-700/50">
               <div className="flex items-center justify-between mb-2">
@@ -396,7 +396,7 @@ const TodoPlannerPage: React.FC = () => {
           )}
         </div>
 
-        {/* Header - More Compact */}
+        {/* Header */}
         <div className="mb-2">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-0.5">Task Planner</h1>
           <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -404,7 +404,7 @@ const TodoPlannerPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Status Filter - Much More Compact */}
+        {/* Status Filter */}
         <div className="mb-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 px-3 py-1.5">
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-xs font-medium text-gray-600 dark:text-gray-400 mr-1">

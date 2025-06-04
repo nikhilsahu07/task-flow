@@ -4,9 +4,9 @@ import { ToastContainer } from 'react-toastify';
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import 'react-toastify/dist/ReactToastify.css'; // Styles for toast notifications
+import 'react-toastify/dist/ReactToastify.css';
 
-import Layout from './components/layout/Layout'; // Provides a consistent layout (header, footer, etc.) across pages.
+import Layout from './components/layout/Layout';
 
 import PrivateRoute from './components/auth/PrivateRoute';
 import LoginPage from './pages/auth/LoginPage';
@@ -127,17 +127,19 @@ const App: React.FC = () => {
 
             <ToastContainer
               position="top-right"
-              autoClose={4000}
+              autoClose={1500}
               hideProgressBar={false}
-              newestOnTop
+              newestOnTop={true}
               closeOnClick
               rtl={false}
-              pauseOnFocusLoss
+              pauseOnFocusLoss={false}
               draggable
               pauseOnHover
               theme="colored"
               toastClassName="font-medium"
               bodyClassName="text-sm"
+              limit={4}
+              enableMultiContainer={false}
             />
           </Router>
         </DndProvider>

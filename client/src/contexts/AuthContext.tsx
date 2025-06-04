@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { User } from '../types';
 import { getCurrentUser, isAuthenticated, logout as logoutApi } from '../api/authApi';
 
-// Define the shape of our context
+// Define the shape of context
 interface AuthContextType {
   user: User | null;
   isLoggedIn: boolean;

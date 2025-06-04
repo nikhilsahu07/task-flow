@@ -6,34 +6,33 @@ import { Task, TaskPriority, TaskStatus } from '../../types';
 import { ITEM_TYPE } from './TaskColumn';
 
 interface TaskCardProps {
-  task: Task; // The task data to display
-  onDelete: (taskId: string) => void; // Callback fired when the delete button is clicked
+  task: Task;
+  onDelete: (taskId: string) => void;
 }
 
-// TaskCard displays individual task information and makes it draggable.
+// TaskCard -> displays individual task information and makes it draggable
 const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
-  const cardRef = useRef<HTMLDivElement>(null); // Ref for the draggable card element
-  const [showTooltip, setShowTooltip] = useState(false); // Controls visibility of the title tooltip on hover
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [showTooltip, setShowTooltip] = useState(false);
 
-  // `useDrag` hook from react-dnd to make the card draggable.
+  // `useDrag` hook from react-dnd to make the card draggable
   const [{ isDragging }, drag] = useDrag({
-    type: ITEM_TYPE, // Defines the type of the draggable item, matching TaskColumn's accept type
-    item: { id: task._id }, // Data associated with the drag operation (typically the item's ID)
+    type: ITEM_TYPE,
+    item: { id: task._id },
     collect: (monitor) => ({
-      // `collect` function gathers dragging state information
-      isDragging: !!monitor.isDragging(), // True if the card is currently being dragged
+      isDragging: !!monitor.isDragging(),
     }),
   });
 
-  // Attach the drag source to the card element's ref.
+  // Attach the drag source to the card element's ref
   drag(cardRef);
 
-  // Prevent tooltip from showing while the card is being dragged.
+  // Prevent tooltip from showing while the card is being dragged
   if (isDragging && showTooltip) {
     setShowTooltip(false);
   }
 
-  // Formats a date string (ISO format) into a more readable local date string.
+  // Formats a date string (ISO format) into a more readable local date string
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'No due date';
     const date = new Date(dateString);
@@ -44,7 +43,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
     });
   };
 
-  // Returns Tailwind CSS classes for styling the priority badge based on task priority.
+  // Tailwind CSS classes for styling the priority badge based on task priority
   const getPriorityColor = (priority: TaskPriority) => {
     switch (priority) {
       case TaskPriority.LOW:
@@ -58,7 +57,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
     }
   };
 
-  // Returns Tailwind CSS classes for styling the status badge based on task status.
+  // Tailwind CSS classes for styling the status badge based on task status
   const getStatusColor = (status: TaskStatus) => {
     switch (status) {
       case TaskStatus.TODO:
@@ -74,7 +73,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
     }
   };
 
-  // Converts a task status enum value (e.g., TaskStatus.IN_PROGRESS) to a display-friendly string (e.g., "In Progress").
+  // Converts a task status enum value
   const formatStatus = (status: TaskStatus) => {
     switch (status) {
       case TaskStatus.TODO:
@@ -99,17 +98,17 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
         }`}
       >
         {task.title}
-        {/* Small triangle pointer for the tooltip */}
+        {/* Small triangle pointer */}
         <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 dark:bg-gray-800 rotate-45"></div>
       </div>
 
       {/* Task Card */}
       <div
-        ref={cardRef} // Assign the ref for react-dnd to make this div draggable
+        ref={cardRef}
         className={`bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:scale-105 transition-all duration-200 ${
           isDragging ? 'opacity-50 scale-105 shadow-2xl rotate-3' : 'opacity-100'
         } cursor-grab active:cursor-grabbing group-hover:shadow-xl`}
-        // Show tooltip only if not dragging.
+        // Show tooltip only if not dragging
         onMouseEnter={() => !isDragging && setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
       >
@@ -136,7 +135,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
             {task.description}
           </p>
 
-          {/* Badges */}
+          {/* Badges - priority and status */}
           <div className="flex flex-wrap gap-2 mb-4">
             <span
               className={`inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full ${getPriorityColor(
@@ -154,7 +153,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onDelete }) => {
             </span>
           </div>
 
-          {/* Task Info */}
+          {/* Task Info - due date and assigned to */}
           <div className="space-y-2">
             <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
               <Clock className="h-4 w-4 mr-2 text-gray-400 dark:text-gray-500" />

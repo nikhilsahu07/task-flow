@@ -308,9 +308,9 @@ const TaskDetailPage: React.FC = () => {
       <ConfirmDialog
         isOpen={isDeleteDialogOpen}
         title="Confirm Task Deletion"
-        message={`Are you sure you want to permanently delete "${task?.title || 'this task'}"? This action cannot be undone.`}
+        message={`Are you sure you want to permanently delete "${task?.title || 'this task'}"?`}
         confirmText="Delete Task"
-        cancelText="Cancel"
+        variant="primary"
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
       />

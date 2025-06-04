@@ -6,11 +6,11 @@ interface ConfirmDialogProps {
   title: string;
   message: string;
   confirmText: string;
-  cancelText: string;
   onConfirm: () => void;
   onCancel: () => void;
   position?: 'top-right' | 'top-middle';
-  variant?: 'danger' | 'primary';
+  variant?: 'danger' | 'primary' | 'success';
+  showBackdrop?: boolean;
 }
 
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
@@ -18,74 +18,92 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   title,
   message,
   confirmText,
-  cancelText,
   onConfirm,
   onCancel,
   position = 'top-right',
-  variant = 'danger',
+  variant = 'primary',
+  showBackdrop = false,
 }) => {
-  // Auto-close after a timeout (optional)
   useEffect(() => {
     if (!isOpen) return;
 
-    // Auto-close safety (optional - enable if you want it to auto-close)
-    // const timer = setTimeout(() => onCancel(), 10000);
-    // return () => clearTimeout(timer);
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onCancel();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen, onCancel]);
 
   if (!isOpen) return null;
 
   const positionClasses = {
-    'top-right': 'top-5 right-5',
-    'top-middle': 'top-5 left-1/2 -translate-x-1/2',
+    'top-right': 'top-6 right-6',
+    'top-middle': 'top-6 left-1/2 -translate-x-1/2',
   };
 
   const widthClasses = {
-    'top-right': 'max-w-sm',
-    'top-middle': 'w-[350px]',
+    'top-right': 'w-72',
+    'top-middle': 'w-72',
   };
 
   const buttonVariants = {
-    danger: 'bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white',
-    primary: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white',
+    danger:
+      'bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white shadow-lg shadow-rose-200/50 dark:shadow-rose-900/30',
+    primary:
+      'bg-gradient-to-r from-blue-400 to-indigo-400 hover:from-blue-500 hover:to-indigo-500 text-white shadow-lg shadow-blue-200/50 dark:shadow-blue-900/30',
+    success:
+      'bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-500 hover:to-teal-500 text-white shadow-lg shadow-emerald-200/50 dark:shadow-emerald-900/30',
   };
 
   return (
-    <div
-      className={`fixed ${positionClasses[position]} z-50 ${widthClasses[position]} animate-fadeIn`}
-    >
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 px-4 py-3 border-b border-gray-200 dark:border-gray-600">
-          <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-base">{title}</h3>
+    <>
+      {/* Backdrop at true only when needed */}
+      {showBackdrop && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 animate-fadeIn"
+          onClick={onCancel}
+        />
+      )}
+
+      {/* Dialog */}
+      <div
+        className={`fixed ${positionClasses[position]} z-50 ${widthClasses[position]} animate-slideIn`}
+      >
+        <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-lg shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+          {/* Close button */}
           <button
             onClick={onCancel}
-            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-all duration-200 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 rounded-md p-1 z-10"
             aria-label="Close"
           >
             <X size={16} />
           </button>
-        </div>
 
-        <div className="p-4 text-gray-600 dark:text-gray-300 text-sm">
-          <p>{message}</p>
-        </div>
+          {/* Content */}
+          <div className="p-4 pr-10">
+            <h3 className="font-semibold text-gray-800 dark:text-gray-200 text-base mb-2 leading-tight">
+              {title}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
+              {message}
+            </p>
 
-        <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-600 flex justify-end gap-3">
-          <button
-            onClick={onCancel}
-            className="px-4 py-2 text-sm bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded transition-colors border border-gray-300 dark:border-gray-500"
-          >
-            {cancelText}
-          </button>
-          <button
-            onClick={onConfirm}
-            className={`px-4 py-2 text-sm ${buttonVariants[variant]} rounded transition-colors`}
-          >
-            {confirmText}
-          </button>
+            {/* Confirm button */}
+            <div className="flex justify-end">
+              <button
+                onClick={onConfirm}
+                className={`px-4 py-2 text-sm font-medium ${buttonVariants[variant]} rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500/50 dark:focus:ring-offset-gray-900`}
+              >
+                {confirmText}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

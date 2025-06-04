@@ -1,11 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast, ToastOptions } from 'react-toastify';
 import { PlusCircle, AlertTriangle, ArrowLeft, Calendar } from 'lucide-react';
 import { getTasksByDate, deleteTask, updateTask } from '../api/taskApi';
 import { Task, TaskStatus } from '../types';
 import TaskColumn from '../components/tasks/TaskColumn';
 import ConfirmDialog from '../components/common/ConfirmDialog';
+
+// Format status for display
+const formatStatus = (status: TaskStatus) => {
+  switch (status) {
+    case TaskStatus.TODO:
+      return 'To Do';
+    case TaskStatus.IN_PROGRESS:
+      return 'In Progress';
+    case TaskStatus.REVIEW:
+      return 'Review';
+    case TaskStatus.DONE:
+      return 'Done';
+    default:
+      return status;
+  }
+};
+
+// Map task status to custom toast type
+const getToastType = (status: TaskStatus): string => {
+  switch (status) {
+    case TaskStatus.TODO:
+      return 'todo';
+    case TaskStatus.IN_PROGRESS:
+      return 'in-progress';
+    case TaskStatus.REVIEW:
+      return 'review';
+    case TaskStatus.DONE:
+      return 'done';
+    default:
+      return 'default';
+  }
+};
+
+// Custom toast for task status updates
+const showTaskStatusToast = (newStatus: TaskStatus, options?: ToastOptions) => {
+  const toastType = getToastType(newStatus);
+  const statusText = formatStatus(newStatus);
+  const message = `Task moved to ${statusText}.`;
+
+  // custom className to apply our status-specific styling
+  const defaultOptions: ToastOptions = {
+    className: `Toastify__toast--${toastType}`,
+    progressClassName: `Toastify__progress-bar--${toastType}`,
+    ...options,
+  };
+
+  return toast(message, defaultOptions);
+};
 
 const DashboardDatePage: React.FC = () => {
   const { date } = useParams<{ date: string }>();
@@ -15,7 +63,7 @@ const DashboardDatePage: React.FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
 
-  // Parse the date parameter (YYYYMMDD format)
+  // Parse the date parameter (YYYYMMDD)
   const parsedDate = React.useMemo(() => {
     if (!date || date.length !== 8) return null;
 
@@ -24,7 +72,7 @@ const DashboardDatePage: React.FC = () => {
     const day = parseInt(date.substring(6, 8), 10);
 
     try {
-      // Use local time to avoid timezone conversion issues
+      // local time to avoid timezone conversion issues
       const dateObj = new Date(year, month, day);
 
       // Validate the date is actually valid
@@ -131,7 +179,7 @@ const DashboardDatePage: React.FC = () => {
 
     const originalStatus = taskToUpdate.status;
 
-    // Optimistic UI update
+    // Optimisticcc UI update
     setTasks((prevTasks) =>
       prevTasks.map((task) => (task._id === taskId ? { ...task, status: newStatus } : task)),
     );
@@ -139,7 +187,7 @@ const DashboardDatePage: React.FC = () => {
     try {
       const response = await updateTask(taskId, { status: newStatus });
       if (response.success) {
-        toast.success(`Task moved to ${formatStatus(newStatus)}.`);
+        showTaskStatusToast(newStatus);
       } else {
         // Revert UI update if API call fails
         setTasks((prevTasks) =>
@@ -155,21 +203,6 @@ const DashboardDatePage: React.FC = () => {
         prevTasks.map((task) => (task._id === taskId ? { ...task, status: originalStatus } : task)),
       );
       toast.error('An unexpected error occurred while updating task status.');
-    }
-  };
-
-  const formatStatus = (status: TaskStatus) => {
-    switch (status) {
-      case TaskStatus.TODO:
-        return 'To Do';
-      case TaskStatus.IN_PROGRESS:
-        return 'In Progress';
-      case TaskStatus.REVIEW:
-        return 'Review';
-      case TaskStatus.DONE:
-        return 'Done';
-      default:
-        return status;
     }
   };
 
@@ -313,9 +346,9 @@ const DashboardDatePage: React.FC = () => {
       <ConfirmDialog
         isOpen={isDeleteDialogOpen}
         title="Confirm Task Deletion"
-        message={`Are you sure you want to permanently delete "${taskToDeleteTitle}"? This action cannot be undone.`}
+        message={`Are you sure you want to permanently delete "${taskToDeleteTitle}"?`}
         confirmText="Delete Task"
-        cancelText="Cancel"
+        variant="primary"
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
       />
